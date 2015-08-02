@@ -49,7 +49,7 @@
 \newcommand{\1}[0]{\mathbbm{1}}
 
 \newcommand{\Beta}[0]{\textnormal{Beta}}
-\newcommand{\Unif}[0]{\textnormal{Uniform}}
+\newcommand{\Unif}[0]{\textnormal{Unif}}
 \newcommand{\Cat}[0]{\textnormal{Cat}}
 \newcommand{\Dir}[0]{\textnormal{Dir}}
 \newcommand{\Bern}[0]{\textnormal{Bern}}
@@ -140,12 +140,13 @@ of exercises using an arm mounted accelerometer and gyroscope (their sensors wer
 near the elbow rather than the wrist).
 
 \chapter{Activity Data}
-Since there does not exist publicly available sensor data for our target domain, we collected a large annotated
-dataset of different people performing a variety of exercises. Each instance in our dataset consists 
-of contiguous sensor readings of a user performing a series of exercises (a \emph{routine}), where each exercise is
-separated by non-exercise activities which includes activities such as stretching, drinking water, setting up 
-equipment or recovery. Any non-exercise activity is referred to uniformly as \emph{rest} and denoted $\varnothing$. 
-Table (\ref{table:dataset}) summarizes our dataset.
+Since there does not exist publicly available sensor data for the target domain, a privately funded
+large annotated dataset of different people performing a variety of exercises was utilized. 
+Each instance in this dataset consists of contiguous sensor readings of a user performing a 
+series of exercises (a \emph{routine}), where each exercise is separated by non-exercise activities 
+which includes activities such as stretching, drinking water, setting up  equipment or recovery. 
+Any non-exercise activity is referred to uniformly as \emph{rest} and denoted with the label 
+$\varnothing$ where applicable, Table~\ref{table:dataset}.
 
 \begin{table}[ht]
     \centering
@@ -159,7 +160,7 @@ Table (\ref{table:dataset}) summarizes our dataset.
     Minutes of Routine Data & 3636 & 1357\\
     Minutes of Activity Data & 1247 & 557\\
     \end{tabular}
-    \caption{Summary of dataset.}
+    \caption{Summary of exercise dataset.}
     \label{table:dataset}
 \end{table}
 
@@ -182,13 +183,13 @@ ask questions, and vary the number of repetitions to match their comfort level.
 \\\\
 Each exercise instance within a routine is annotated by an observer with with an exercise name, 
 form variation (when applicable), start time, stop time, end of repetition times, and weight (when applicable). 
-Figure (\ref{fig:routine}) shows an example routine with exercise start time and stop time annotations.
+Figure~\ref{fig:routine} shows an example routine with exercise start time and stop time annotations.
 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=1\textwidth]{img/routine_380.pdf}
     \caption{Example routine time series, 
-    vertically order by $x$, $y$, $z$ (accelerometer, axis range from -3 to 3) 
+    vertically ordered by $x$, $y$, $z$ (accelerometer, axis range from -3 to 3) 
     and $q$, $r$, $s$ (gyroscope, axis range from -600 to 600).}
     \label{fig:routine}
 \end{figure}
@@ -250,11 +251,13 @@ Standard notation used throughout is reviewed here.
 Random variables are denoted by uppercase letters $X$, $Y$ 
 and the values these variables take by the corresponding lower case 
 letter $x$, $y$. The probability that a particular random variable $X$
-takes a value $x$ is denoted by $P(X=x)$. When clear from context the uppercase
-letter will be omitted and the previous expression will simply be written
-$P(x)$. If $X$ has distribution $\SomeDist$ with parameters $\theta$ we write
-$X \sim \SomeDist(\theta)$. The Uniform, Bernoulli, Categorical, Dirichlet, and Normal distribution
-are denoted by $\Unif$, $\Bern$, $\Cat$, $\Dir$, and $\Norm$ respectively.
+takes a value $x$ is denoted $P(X=x)$, and $P(X=x \mid Y=y)$ denotes
+the conditional probability that $X=x$ given the value of some other variable $Y=y$. 
+If clear from context the uppercase letter will be omitted and the previous expressions 
+will simply be written $P(x)$ and $P(x \mid y)$. If $x$ is distributed according to some 
+distribution $\SomeDist$ with parameters $\theta$ we write $x \sim \SomeDist(\theta)$. 
+The Uniform, Bernoulli, Categorical, Dirichlet, and Normal distribution are denoted by 
+$\Unif$, $\Bern$, $\Cat$, $\Dir$, and $\Norm$ respectively.
 \\\\
 As this thesis deals almost exclusively with time series, $t$ will always
 be used as a time index and $T$ as the length of the time series. 
@@ -306,7 +309,7 @@ The corresponding generative story is given by
 \end{enumerate}
 
 where $\SomeDist$ is some parametric emission distribution.
-Dependencies can be visualized graphically in Figure (\ref{fig:hmm}), 
+Dependencies can be visualized graphically in Figure~\ref{fig:hmm}, 
 where vertices represent variables, edges represent dependencies, 
 and grey vertices represent observed variables.
 
@@ -613,7 +616,7 @@ described in \cite{pcfg-bayesian-johnson} for \acp{PCFG}, and utilized
 for \acp{HMM} in \cite{hmm-comparison-johnson}. 
 \\\\
 The primary difficulty in constructing such a sampler is due to marginalizing over the parameters,
-as doing so introduces dependencies amongst the latent state sequences $\mathcal{Y}$, Figure (\ref{fig:hmm-marg}). 
+as doing so introduces dependencies amongst the latent state sequences $\mathcal{Y}$, Figure~\ref{fig:hmm-marg}. 
 Let us proceed in the usual manner for constructing such a Gibbs sampler. We have 
 
 \begin{equation}
@@ -639,7 +642,7 @@ sample $x^*$ from a proposal distribution $q(\cdot \mid x)$ which is probabilist
 accepted, replacing the current $x$, or rejected. The result is a series of samples 
 whose stationary distribution is $P(X)$. In the special case that the proposal distribution
 does not depend on the current sample, $q(x^* \mid x) = q(x^*)$, the proposal is said to 
-be \emph{independent}. The generic Metropolis-Hastings algorithm is given in algorithm (\ref{alg:mh-generic}).
+be \emph{independent}. The generic Metropolis-Hastings algorithm is given in Algorithm~\ref{alg:mh-generic}.
 
 \begin{algorithm}[H]
     \caption{The Metropolis-Hastings Algorithm.\label{alg:mh-generic}}
@@ -713,7 +716,7 @@ in the following generative story
 \end{align*}
 
 where $\HMM(\Theta_{z_i})$ is used as shorthand for the \ac{HMM}
-generative story outlined in Section \ref{sec:hmm-intro}. Again, the marginal likelihood
+generative story outlined in Section~\ref{sec:hmm-intro}. Again, the marginal likelihood
 $\mathcal{Z}$, $\mathcal{Y}$, and $\mathcal{X}$ can be expressed in closed form in terms of 
 hyper parameters and counts.
 
@@ -793,7 +796,7 @@ equation ($\ref{eq:joint-marg-finite-mixture}$).
 
 Having derived an expression for the the marginal likelihood of an infinite
 mixture of \acp{HMM}, the same generic Metropolis-within-Gibbs approach presented
-in Section \ref{sec:collapsed-sampler} could be applied to carry out inference in
+in Section~\ref{sec:collapsed-sampler} could be applied to carry out inference in
 the infinite mixture of \acp{HMM}. 
 \\\\
 However, collapsed Gibbs sampling for Dirichlet processes is a well studied problem for 
@@ -844,7 +847,7 @@ a high accuracy unsupervised grammar induction system.
 The structure of the model used is motivated by the observation that artificial 
 sequences which resemble sensor reading during an exercise can be recognized by a \ac{DFA}
 with cyclic transition structures. Consider the oscillatory discrete time series depicted 
-in Figure (\ref{fig:osc-step}). 
+in Figure~\ref{fig:osc-step}. 
 
 \begin{figure}[H]
     \centering
@@ -869,7 +872,7 @@ as symbols in an alphabet this sequence belongs to the regular language
     \right]^*
 \]
 
-which is recognized by the \ac{DFA} in Figure (\ref{fig:cyclic-dfa}).
+which is recognized by the \ac{DFA} in Figure~\ref{fig:cyclic-dfa}.
 
 \begin{figure}[H]
     \centering
@@ -917,7 +920,7 @@ which is recognized by the \ac{DFA} in Figure (\ref{fig:cyclic-dfa}).
 
 The natural probabilistic generalization of this \ac{DFA} is a \ac{HMM}
 with a cyclic transition structure and parametric emission distributions replacing
-discrete symbols, Figure (\ref{fig:cyclic-hmm}). 
+discrete symbols, Figure~\ref{fig:cyclic-hmm}. 
 
 \begin{figure}[H]
     \begin{tikzpicture}
@@ -1011,7 +1014,7 @@ For the first task, the \ac{HMM} fit with the collapsed Gibbs sampling performed
 and the \ac{MAP} state sequence closely aligned with the true state sequence. 
 On the other hand the \ac{HMM} fit with \ac{EM} typically only utilized a single state 
 and was therefore unable to distinguish between actual states in a better than random fashion,
-Figure (\ref{fig:trick-coin-states}).
+Figure~\ref{fig:trick-coin-states}.
 
 \begin{figure}[H]
     \centering
@@ -1026,7 +1029,7 @@ For the second task 500 $(\seq{x}{1}{T}^{\text{trick}}, \seq{x}{1}{T}^\text{sing
 of sequences were generated. The ability of each model to discriminate (by comparing likelihoods) 
 is assessed for each pair. This same experiment was repeated 25 times using a different single 
 training sequence and pairs of testing sequences. Again, the \ac{HMM} fit with Gibbs sampling
-significantly outperformed the \ac{HMM} fit with \ac{EM}, Figure (\ref{fig:trick-coin-disc}).
+significantly outperformed the \ac{HMM} fit with \ac{EM}, Figure~\ref{fig:trick-coin-disc}.
 
 \begin{figure}[H]
     \centering
@@ -1117,13 +1120,13 @@ Here the $\alpha_i$ terms are parameters of a prior on transitions from
 
 Using just 2 sample sequences and the above described prior structure with
 1 \emph{out} state and 5 \emph{in} states allows the collapsed Gibbs sampler
-to discover highly accurate segmentations, Figure (\ref{fig:artificial-segmentation-struct}),
-in a completely unsupervised manner. To demonstrate the necessity for the prior
+to discover highly accurate segmentations in a completely unsupervised manner,
+Figure~\ref{fig:artificial-segmentation-struct}. To demonstrate the necessity for the prior
 and rule out the possibility that the model is doing something uninteresting such
 as modeling differences in variance within the distinct regimes, the same experiment
 was repeated with a standard \ac{HMM} with two states. In this case the model is completely
 unable to discover any interesting structure in the sequence, 
-Figure (\ref{fig:artificial-segmentation-flat}).
+Figure~\ref{fig:artificial-segmentation-flat}.
 
 \begin{figure}[H]
     \centering
@@ -1141,7 +1144,7 @@ Figure (\ref{fig:artificial-segmentation-flat}).
 
 \section{Clustering Sequences}
 The final synthetic experiment explores the Bayesian nonparametric approach outlined in 
-Section \ref{sec:mohmms} for the purpose of sequence clustering. As ground truth clusters
+Section~\ref{sec:mohmms} for the purpose of sequence clustering. As ground truth clusters
 the following four recurrent functions are used.
 
 \begin{align*}
@@ -1167,7 +1170,7 @@ Two clustering approaches are considered. The first utilizes standard \acp{HMM}
 as the base distribution and the second uses \acp{CHMM} as the base distribution.
 The experiment is repeated 10 times and the resulting clusterings are compared using 
 \ac{AMI} \cite{ami}, a version of Mutual Information corrected to adjust for chance agreements. 
-Figure (\ref{fig:artificial-cluster-metrics}) shows that as well as increased performance,
+Figure~\ref{fig:artificial-cluster-metrics} shows that as well as increased performance,
 in terms of \ac{AMI}, the Dirichlet Process with \ac{CHMM} base distributions finds
 the correct number of clusters in 80\% of experiments. This is in contrast to the standard
 \ac{HMM} which is unable to find the actual number of clusters in any of the experiments.
@@ -1205,7 +1208,7 @@ available data (approximately 70\% of the data was used for training and the rem
 disjoint is particularly important as it mimics the situation one would actually encounter
 if deploying such a system. The same train/test split was used for all segment classification
 experiments. Classifier hyperparameters were set using grid search performed on an analogous 
-split of the training data. Table (\ref{table:segment-dataset}) summarizes the splits.
+split of the training data. Table~\ref{table:segment-dataset} summarizes the splits.
 
 \begin{table}[ht]
     \centering
@@ -1226,7 +1229,7 @@ The proposed \ac{CHMM} was compared to a Structured Perceptron \cite{perceptron-
 and a strong performing system heavily influenced from the activity recognition literature \cite{ms-activity}. 
 As only sequences with a single label are considered in this experiment, a voting procedure is used
 to aggregate predictions for individual time steps to produce the final classification for both
-the Random Forest and Structured Perceptron. In some sense this gives an unfair advantage to these
+the Random Forest and Structured Perceptron. Note that this gives an unfair advantage to these
 models as in a real world activity classification setting, one would not a priori have knowledge of
 the bounds (segmentation) over which to aggregate votes.
 
@@ -1252,7 +1255,7 @@ for each of the 3 accelerometer and 3 gyroscope axis:
     \item The magnitude of the power specturm summed across 10 linearly spaced bands.
 \end{itemize}
 The free software scikit-learn \cite{scikit-learn} was used
-to estimate parameters if the random forest. Grid search was performed 
+to estimate parameters of the Random Forest. Grid search was performed 
 over the following hyper-parameters:\footnote{
 Best performing settings on the validation set are noted in bold.
 }
@@ -1304,24 +1307,56 @@ highly misspecified models, and/or in cases in which the final performance will 
 the MAP state sequence. For further discussion on this subject we defer the interested reader 
 to Sections 7 and 8 of \cite{viterbi-em} as well as \cite{estimate-wrong}.
 \\\\
-The second method is based on the collapsed block Gibbs sampling approach outlined in Section
-\ref{sec:collapsed-sampler}. The MAP sampled assignment is used to produce a point estimate of the parameters.
+The second method is based on the collapsed block Gibbs sampling approach outlined in 
+Section~\ref{sec:collapsed-sampler}. The MAP sampled assignment is used to produce a point estimate of the parameters.
 
 \section{Results}
-Discussion + Results with \emph{rest} as a class.
+Table~\ref{table:segment-results} gives train and test set accuracy numbers for the
+considered classification methods. In general the Random Forest outperforms the other 
+models in terms of raw accuracy, although the \ac{MoHMM} is quite competitive. 
+The Structured Perceptron significantly under performs the other models, 
+likely due to being restricted to linear decision boundaries as noted above. 
+\\\\
+The same experiments as above were repeated for the Random Forest and \ac{MoHMM} fit with
+the collapsed Gibbs sampler, but this time including a number of \emph{rest} sequences
+equal the most frequent activity. While the accuracy of the Random Forest degrades in this regime, 
+surprisingly the accuracy of the \ac{MoHMM} increases. Inspecting performance for just the \emph{rest} class
+reveals this is at least in some part due to the \ac{MoHMM} doing a better job of modeling 
+the \emph{rest} class, the last two columns of Table~\ref{table:segment-results-rest}.
+The lower recall number for the Random Forest imply that approximately 25\% of the \emph{rest} 
+sequences are misclassified as an activity.
 \begin{table}[ht]
     \centering
     \begin{tabular}{l r r}\hline
-    \textbf{Classifier} & \textbf{Train Error} &\textbf{Test Error} \\\hline
-    MAP Baseline & 0.957 & 0.963 \\
-    Structured Perceptron & 0.319 & 0.402 \\
-    Random Forest & 0.003 & \textbf{0.173} \\
-    MoHMM (block Gibbs) & 0.152 & 0.225 \\
-    MoHMM (Viterbi) & 0.163 & 0.238 \\
+    \textbf{Classifier} & \textbf{Train Accuracy} &\textbf{Test Accuracy} \\\hline
+    MAP Baseline & 0.043 & 0.037 \\
+    Structured Perceptron & 0.681 & 0.598 \\
+    Random Forest & 0.997 & \textbf{0.827} \\
+    MoHMM (block Gibbs) & 0.848 & 0.775 \\
+    MoHMM (Viterbi) & 0.837 & 0.762 \\
     \end{tabular}
-    \caption{Segment classification results.}
+    \caption{Segment classification performance of different classifiers.}
     \label{table:segment-results}
 \end{table}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l r r r r r}\hline
+    \textbf{Classifier} & \textbf{Train Acc.} & \textbf{Test Acc.} & \textbf{F1}    & \textbf{Precision} & \textbf{Recall} \\\hline
+    Random Forest       & 0.995               & \textbf{0.81}      & 0.789          & \textbf{0.925}     & 0.755 \\
+    MoHMM               & 0.829               & 0.799              & 0.790          & 0.81               & \textbf{0.829} \\
+    \end{tabular}
+    \caption{Segment classification performance including the \emph{rest} class. 
+    The F1-score is reported as a macro (unweighted) average of the individual classes.
+    Precision and recall are for \emph{rest} only.}
+    \label{table:segment-results-rest}
+\end{table}
+
+Another important observation is the significant performance degradation of the Random Forest
+on unseen data. Performance of the Random Forest decreases by 17\% and 18.5\% on unseen data
+for the two experiments described here, a significant amount compared to the more mild 8\% and 4\% 
+percent decreases obtained by the \ac{MoHMM}. Several attempts were made to combat overfitting in
+the Random Forest, largely by reducing the complexity of the individual ensemble members, however
+in all cases this resulted in decreased test performance.
 
 \chapter{Segmenting Exercises}
 The above strong performing baseline has the disadvantage that it requires ground truth
