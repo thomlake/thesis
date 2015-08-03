@@ -4,7 +4,7 @@
 \usepackage{bm}
 \usepackage{bbm}
 \usepackage{fancyhdr}
-\usepackage[nolist,nohyperlinks]{acronym}
+\usepackage[nohyperlinks]{acronym}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{datetime}
@@ -171,17 +171,17 @@ The device collects 3-axis accelerometer and 3-axis gyroscope readings at 15Hz.
 This data is transferred in real-time to a PC using Blue Tooth Low Energy (BLE).
 
 \section{Data Collection Methodology}
-Participants in our data collection project are volunteers recruited utilizing social media
-and word of mouth. As well as sensor data demographic information including age, sex, height, weight,
-and a self reported expertise level is recorded. 
+Participants in the data collection project were volunteers recruited utilizing social media
+and word of mouth. In addition to sensor data, demographic information including age, sex, height, weight,
+and a self reported expertise level was recorded. 
 \\\\
-Participants are instructed they will be prompted to perform a series of exercises (between 10 and 20)
-along with a suggested number of repetitions. For exercises including variable weight they are directed
-to choose a weight with which they are comfortable. Furthermore, they are instructed to perform the exercises
+Participants were instructed that they will be prompted to perform a series of exercises (between 10 and 20)
+along with a suggested number of repetitions. For exercises including variable weight they were directed
+to choose a weight with which they are comfortable. Furthermore, they were instructed to perform the exercises
 as naturally as possible, to skip any exercises with which they are unfamiliar, take frequent breaks,
 ask questions, and vary the number of repetitions to match their comfort level.
 \\\\
-Each exercise instance within a routine is annotated by an observer with with an exercise name, 
+Each exercise instance within a routine was annotated by an observer with an exercise name, 
 form variation (when applicable), start time, stop time, end of repetition times, and weight (when applicable). 
 Figure~\ref{fig:routine} shows an example routine with exercise start time and stop time annotations.
 
@@ -204,7 +204,7 @@ The second type of ambiguity typically involves positioning, resulting in exerci
 but whose sensor readings can be drastically different. 
 Examples include supinated (underhand) vs pronated (overhand) for pull-ups and dumbbell curls,
 or hands on temple vs hands behind head vs arms crossed for sit-ups and crunches. To solve this problem 
-we defined a standard naming convention for exercises which include form variations. This allows grouping
+a standard naming convention for exercises which include form variations was defined. This allows grouping
 form variations into different classes, which was found to be beneficial for some classifiers. 
 The final naming convention we adopted is
 \[
@@ -219,24 +219,6 @@ and
 \[
     \underbrace{}_{\text{modifier}} \; \underbrace{}_{\text{equipment}} \; \underbrace{\text{pull-up}}_{\text{exercise}} \; \underbrace{\text{(supinated)}}_{\text{form variation}}
 \]
-
-\section{Technological Limitations}
-The need for precise temporal synchronization between the wrist worn device and software
-used to annotate the sensor data with start/stop times and repetitions end times was a significant
-challenge.
-\begin{itemize}
-    \item BLE isn't fast enough to sync
-    \item Noisy start/stop tags
-    \item Noisier repetition tags (unusable)
-    \item Motivation for generative model, model latent repetitive structure
-\end{itemize}
-
-\begin{figure}[t!]
-    \centering
-    \includegraphics[width=1\textwidth]{img/annot_error_activity_202928.pdf}
-    \caption{Example annotation error.}
-    \label{fig:annot-arror}
-\end{figure}
 
 \chapter{Hidden Markov Models}
 \acp{HMM} \cite{rabiner-hmms} are a common theme throughout this thesis. 
@@ -340,7 +322,7 @@ be denoted by $K$.
 
 \subsubsection{Likelihood}
 Computing the likelihood of an observed sequence $\seq{x}{1}{T}$ can be done naively
-by marginalizing of all possible length $T$ states sequences
+by marginalizing over all possible length $T$ states sequences
 
 \[
     P(\seq{x}{1}{T}) = \sum_{\seq{y}{1}{T}} P(\seq{x}{1}{T}, \seq{y}{1}{T})
@@ -436,7 +418,7 @@ where $\Bf$ is the multivariate beta function,
     \Bf(\alpha) = \frac{\prod_k \Gamma(\alpha_k)}{\Gamma(\sum_k \alpha_k)}, \label{eq:betafunc}
 \end{equation}
 
-and $\Gamma$ is the generalized factorial.
+and $\Gamma$ is the Gamma function.
 \\\\
 Let $D = \{x_1, \ldots, x_m\}$ and $n_k = \sum_{x \in D} \1\{x = k\}$ count 
 the number of occurrences of $k \in D$. Assuming
@@ -497,9 +479,10 @@ It is particularly helpful in the context of Gibbs sampling since reducing the n
 of parameters that need to be sampled frequently results in increased efficiency.
 
 \subsection{The Bayesian Hidden Markov Model}
-In the context of \acp{HMM}, it is convenient due to conjugacy to place Dirichlet priors
-with parameters $\alpha_0$ and $\alpha_i$ over the initial and transition 
-parameters $\pi_0$ and $\pi_i$. Assuming each state's emission distribution is also Categorical 
+Since the initial and transition distributions of an \ac{HMM} are Categorical distributions
+it is convenient, due to the above described conjugacy relation, to place Dirichlet priors
+with parameters $\alpha_0$ and $\alpha_i$ over their parameters $\pi_0$ and $\pi_i$. 
+Assuming each state's emission distribution is also Categorical 
 with parameters $\theta_i$, a Dirichlet prior with parameters $\alpha_i^\p$ may be placed 
 over these parameters as well. This results in the following generative story.
 
@@ -531,16 +514,16 @@ and the number of times a particular observation $o$ is observed in state $i$ re
  & \times \prod_{(\seq{x}{1}{T},\seq{y}{1}{T}) \in (\mathcal{X},\mathcal{Y})} P(\seq{x}{1}{T},\seq{y}{1}{T})
 \end{align}
 
-where $\Theta = \{\pi_0, \pi_i, \theta_i\}$ and $\alpha = \{alpha_0, \alpha_i, \alpha_i^\prime\}$.
-
-Substituting into (\ref{eq:bayes-hmm-joint-simple}) the form of the priors and 
-rewriting in terms of the counting variables gives
+where $\Theta = \{\pi_0, \pi_i, \theta_i\}$ and $\alpha = \{\alpha_0, \alpha_i, \alpha_i^\prime\}$.
+\\\\
+Substituting the equations for the of the priors into (\ref{eq:bayes-hmm-joint-simple}) 
+and rewriting in terms of the counting variables gives,
 
 \begin{align} \label{eq:bayes-hmm-joint-full}
     P(\mathcal{X}, \mathcal{Y} \mid \Theta, \alpha)
     &= \frac{1}{\Bf(\alpha_0)} \prod_{i} \pi_{0,i}^{n_{0,i} + \alpha_{0,i} - 1} \nonumber \\
     & \times \prod_i \left(\frac{1}{\Bf(\alpha_i)} \prod_{j} \pi_{i,j}^{n_{i,j} + \alpha_{i,j} - 1}\right) \nonumber \\
-    & \times \prod_i \left(\frac{1}{\Bf(\alpha_i^\prime)} \prod_{v} \pi_{i,j}^{n_{i,v}^\prime + \alpha_{i,v}^\prime - 1}\right)
+    & \times \prod_i \left(\frac{1}{\Bf(\alpha_i^\prime)} \prod_{v} \pi_{i,j}^{n_{i,v}^\prime + \alpha_{i,v}^\prime - 1}\right).
 \end{align}
 
 Repeatedly applying the same steps used to derive (\ref{eq:dir-int-sol})
@@ -567,6 +550,14 @@ From an algorithmic perspective (\ref{eq:marg-likelihood-hmm}) has a particularl
 form. Given the counting variables the time required to compute the marginal likelihood does not 
 depend on the number of sequences or their length, only the number of states and and possible observations.
 
+\section{A Block Collapsed Gibbs Sampler for Hidden Markov Models} \label{sec:collapsed-sampler}
+This Section develops a collapsed Gibbs Sampler for $P(\mathcal{Y} \mid \mathcal{X}, \alpha)$.
+We do so using a block-wise approach, resampling an entire state sequence $\seq{y}{1}{T}^i$ given
+$\mathcal{X}$, $\mathcal{Y}_{-i}, \alpha$, where $\mathcal{Y}_{-i}$ denotes 
+$\mathcal{Y} \setminus \{\seq{y}{1}{T}^i\}$. This sampler follows the approach 
+described in \cite{pcfg-bayesian-johnson} for \acp{PCFG}, and utilized 
+for \acp{HMM} in \cite{hmm-comparison-johnson}. 
+\\\\
 \begin{figure}[ht!]
     \centering
     \begin{tikzpicture}
@@ -606,15 +597,6 @@ depend on the number of sequences or their length, only the number of states and
     they now share a common parent $\alpha$ in (b).}
     \label{fig:hmm-marg}
 \end{figure}
-
-\section{A Block Collapsed Gibbs Sampler for Hidden Markov Models} \label{sec:collapsed-sampler}
-This Section develops a collapsed Gibbs Sampler for $P(\mathcal{Y} \mid \mathcal{X}, \alpha)$.
-We do so using a block-wise approach, resampling an entire state sequence $\seq{y}{1}{T}^i$ given
-$\mathcal{X}$, $\mathcal{Y}_{-i}, \alpha$, where $\mathcal{Y}_{-i}$ denotes 
-$\mathcal{Y} \setminus \{\seq{y}{1}{T}^i\}$. This sampler follows the approach 
-described in \cite{pcfg-bayesian-johnson} for \acp{PCFG}, and utilized 
-for \acp{HMM} in \cite{hmm-comparison-johnson}. 
-\\\\
 The primary difficulty in constructing such a sampler is due to marginalizing over the parameters,
 as doing so introduces dependencies amongst the latent state sequences $\mathcal{Y}$, Figure~\ref{fig:hmm-marg}. 
 Let us proceed in the usual manner for constructing such a Gibbs sampler. We have 
@@ -740,11 +722,11 @@ In many situations $K$ is unknown. Estimation of $K$ can be carried out using st
 techniques such as cross validation or Bayesian Information Criterion, but this is
 often computationally difficult and philosophically unsatisfying. A modern 
 approach to dealing with this problem is Bayesian nonparametrics \cite{jordan-bayesian-nonparam}. 
-In brief, Bayesian nonparametrics allow one to sidestep the problems associated with finite
+In brief, Bayesian nonparametric techniques allow one to sidestep the problems associated with finite
 capacity models, by assuming observations are generated from infinite dimensional objects,
-for which only a finite number or involved in the generation of a finite set of samples. 
+for which only a finite number are involved in the generation of a finite set of samples. 
 \\\\
-In the case of mixture models, the above model can naturally be extended to handle a 
+In the case of mixture models, the above model naturally be extended to handle a 
 countably infinite number of cluster components using a Dirichlet Process \cite{teh-dirichlet}.
 The constructive definition of the Dirichlet process is given in terms of a 
 \emph{stick-breaking process} \cite{sethuraman-constructive} with parameter 
@@ -831,7 +813,7 @@ be learned in an unsupervised manner. This chapter describes a structured genera
 repetitive sequences. The model is a \ac{HMM} with cyclically structured transitions which, 
 for brevity, will be dubbed the \ac{CHMM}. 
 \\\\
-This model is specifically designed to reflect the structure of the the repetitive sequences
+This model is specifically designed to reflect the structure of the repetitive sequences
 often encountered in activity recognition. While there have been several previous studies demonstrating 
 the effectiveness of \acp{HMM} for recognizing activities from wearable sensors, \cite{hhmm-lee}, 
 \cite{factored-hmm-tran}, to date none have explicitly designed models to account for the repetitive nature 
@@ -857,7 +839,7 @@ in Figure~\ref{fig:osc-step}.
 \end{figure}
 
 Taking the difference between successive values $x_t$ and $x_{t+1}$ 
-as symbols in an alphabet this sequence belongs to the regular language
+as symbols in an alphabet, this sequence belongs to the regular language
 
 \[
     \left[
@@ -869,7 +851,7 @@ as symbols in an alphabet this sequence belongs to the regular language
         \left[-\tfrac{1}{2}\right]^+
         \left[-1\right]^*
         \left[-\tfrac{1}{2}\right]^+
-    \right]^*
+    \right]^*,
 \]
 
 which is recognized by the \ac{DFA} in Figure~\ref{fig:cyclic-dfa}.
@@ -974,11 +956,12 @@ discrete symbols, Figure~\ref{fig:cyclic-hmm}.
 \end{figure}
 
 \section{Advantages}
-This basic, and surprisingly simple model is elaborated upon in various ways to solve a 
+This basic, and surprisingly simple model is elaborated in various ways to solve a 
 number of synthetic and real world tasks related to motion recognition in the following chapters.
-As well as inherently capturing the repetitive nature of exercise, a \ac{CHMM} with $K$ 
-states only has $O(K)$ transition parameters\footnote{A \ac{CHMM} with $K$ states has 
-exactly $2K$ transition parameters.} unlike a \ac{HMM} in which every state can transition
+Not only does the \ac{CHMM} inherently capture the repetitive nature of exercise, but due to the 
+highly structured transition distribution a\ac{CHMM} with $K$ states only has $O(K)$ transition 
+parameters\footnote{A \ac{CHMM} with $K$ states has exactly $2K$ transition parameters.}.
+This is unlike a \ac{HMM} in which every state can transition
 to every other state which has $O(K^2)$ transition parameters. 
 This reduction in parameters should require less data to estimate, 
 and reduces the computational complexity of typical inference tasks such as 
@@ -986,7 +969,7 @@ filtering, smoothing, and decoding from $O(TK^2)$ to $O(TK)$.
 
 \chapter{Synthetic experiments with Hidden Markov Model}
 This chapter describes several synthetic experiments carried out utilizing the models and
-inference procedures described in the previous Chapters. The focus on synthetic data
+inference procedures developed in the previous Chapters. The focus on synthetic data
 is primarily intended as a demonstration and exploration of model aptitude. Experiments
 with real world data are presented in the following chapters.
 
@@ -1001,14 +984,17 @@ states represent the coin being used, the observations the observed outcomes, an
 the state transitions the probability of swapping coins.
 \\\\
 A single sequence of 500 flips is observed, to which the parameters of a \ac{HMM} is fit using 
-either the collapsed Gibbs sampler or standard the standard \ac{EM}
+either the collapsed Gibbs sampler or the standard \ac{EM}
 \footnote{Application of \ac{EM} to \acp{HMM} is commonly also referred to as 
 the Baum-Welch algorithm.} 
 estimation method. 
+\\\\
 The resulting \ac{HMM}'s performance was assessed on two tasks. 1.) Inferring
 the coin being used at each time of the training sequence, and 2.) Discriminating between an
 out of sample sequence of flips drawn from the two coin switching process or a single coin with the 
 same expected value as the trick coin.
+\\\
+The point
 \\\\
 For the first task, the \ac{HMM} fit with the collapsed Gibbs sampling performed quite well,
 and the \ac{MAP} state sequence closely aligned with the true state sequence. 
@@ -1039,12 +1025,12 @@ significantly outperformed the \ac{HMM} fit with \ac{EM}, Figure~\ref{fig:trick-
     \label{fig:trick-coin-disc}
 \end{figure}
 
-\section{Learning to Segment Repetitive Sequences}
+\section{Learning to Segment Repetitive Sequences}\label{sec:art-seg}
 Having demonstrated the effectiveness of the collapsed Gibbs sampling approach, 
-this Section demonstrates the ability of the \ac{CHMM} to utilize its repetitive 
-latent structure in an artificial segmentation task. To do so sequences were generate by
+we now describe experiments which demonstrate the ability of the \ac{CHMM} to utilize its repetitive 
+latent structure in an artificial segmentation task. Sequences were generate by
 embedding a recurrent sequence between two constant sequences and adding Gaussian random noise.
-In particular a example sequence is generated from the following distribution.
+In particular an example sequence is generated from the following distribution.
 
 \begin{align*}
     t_1 & \sim 100 \cdot \Beta(5, 5) + 10 \\
@@ -1063,17 +1049,18 @@ denoting whether the sequence is \emph{in} ($I$), or \emph{out} ($O$) of the rep
 of the sequence at time $t$. The annotation is similar to the BIO (begin/in/out) representation
 commonly used in \ac{NLP} chunking applications \cite{ramshaw-bio}.
 \\\\ 
-Rather than using these annotations within the learning procedure, for example to learn a 
-discriminative classifier, an unsupervised approach is taken, in which only the raw sequence 
+Rather than using these annotations within the learning procedure (for example, to learn a 
+discriminative classifier) an unsupervised approach is taken, in which only the raw sequence 
 is available during training. Thus the ability to discover structure in the time series rests 
 entirely on a priori structure built into the model itself.
 \\\\
-To capture this structure the prior over transition matrices (a Dirichlet distribution for each row) 
-is split into three regime blocks. The first and third block corresponds to a standard \ac{HMM}
+To capture this structure the prior distribution over transition matrices 
+(a Dirichlet distribution for each row) is split into three regime blocks. 
+The first and third block corresponds to a standard \ac{HMM}
 in which each state may transition to every other state, the \emph{out} portions of the sequence. 
 The second block corresponds to the \ac{CHMM} structure in which states transition
 only to themselves or their successor states, the \emph{in} portion of the sequence.
-To allow movement between these blocks transitions are added from each state in the first block
+To allow movement between these blocks, transitions are added from each state in the first block
 to the start state of the second block, and from the final state of the second block to each state
 in the third block. Diagrammatically this results in the structure depicted below.
 
@@ -1115,16 +1102,16 @@ Here the $\alpha_i$ terms are parameters of a prior on transitions from
     \alpha_1: & \text{ an \emph{out} state to an \emph{in} state,}\\
     \alpha_2: & \text{ an \emph{in} state to an \emph{out} state,}\\
     \alpha_3: & \text{ an \emph{in} state to itself,}\\
-    \alpha_4: & \text{ an \emph{in} state to its succesor \emph{in} state.}\\
+    \alpha_4: & \text{ an \emph{in} state to its successor \emph{in} state.}\\
 \end{align*}
 
 Using just 2 sample sequences and the above described prior structure with
 1 \emph{out} state and 5 \emph{in} states allows the collapsed Gibbs sampler
 to discover highly accurate segmentations in a completely unsupervised manner,
-Figure~\ref{fig:artificial-segmentation-struct}. To demonstrate the necessity for the prior
-and rule out the possibility that the model is doing something uninteresting such
-as modeling differences in variance within the distinct regimes, the same experiment
-was repeated with a standard \ac{HMM} with two states. In this case the model is completely
+Figure~\ref{fig:artificial-segmentation-struct}. To demonstrate the necessity for the prior,
+and rule out the possibility that the model is doing something uninteresting (such
+as modeling differences in variance within the distinct regimes) the same experiment
+was repeated with a standard \ac{HMM} with two states. In this case, the model is completely
 unable to discover any interesting structure in the sequence, 
 Figure~\ref{fig:artificial-segmentation-flat}.
 
@@ -1154,7 +1141,7 @@ the following four recurrent functions are used.
     f_4(t) &= \max(0, 2 \cos(t/ 4))
 \end{align*}
 
-An example sequences is then generated from the following process.
+An example sequence is then generated from the following process.
 
 \begin{align*}
     t_0 & \sim \Unif({0, \ldots, 200}) \\
@@ -1179,7 +1166,7 @@ the correct number of clusters in 80\% of experiments. This is in contrast to th
     \centering
     \includegraphics[width=0.8\textwidth]{./img/artificial-clusters.pdf}
     \caption{Example from each cluster and recurrent structure
-    discovered by the DP mixture of HMMs with structured prior.}
+    discovered by the Dirichlet Process mixture of HMMs with structured prior.}
     \label{fig:artificial-clusters}
 \end{figure}
 
@@ -1193,8 +1180,8 @@ the correct number of clusters in 80\% of experiments. This is in contrast to th
 \end{figure}
 
 
-\chapter{Segmented Exercise Classification}
-An obvious precursor to classifying each timestep of an entire routines is to classify the hand segmented
+\chapter{Segmented Exercise Classification}\label{chp:segment-class}
+An obvious precursor to classifying each timestep of an entire routine is to classify the hand segmented
 exercises into 1 of $K$ mutually exclusive exercise classes. This task is significantly easier than
 than the full routine classification task since several simplifying assumptions can be made. First,
 we can assume each sequence belongs to a single class. Second, we can assume each class is approximately 
@@ -1204,11 +1191,10 @@ full routines, which are overwhelmingly dominated by \emph{rest}.
 \section{Setup}
 For training and evaluation purposes we used a random train/test split of the
 available data (approximately 70\% of the data was used for training and the remaining
-30\% was used for testing) randomized over users. Keeping the set of users in the train and test 
+30\% was used for testing), randomized over users. Keeping the set of users in these sets
 disjoint is particularly important as it mimics the situation one would actually encounter
-if deploying such a system. The same train/test split was used for all segment classification
-experiments. Classifier hyperparameters were set using grid search performed on an analogous 
-split of the training data. Table~\ref{table:segment-dataset} summarizes the splits.
+if deploying such a system. Classifier hyperparameters were set using grid search performed on an 
+analogous split of the training data. Table~\ref{table:segment-dataset} summarizes the splits.
 
 \begin{table}[ht]
     \centering
@@ -1230,18 +1216,18 @@ and a strong performing system heavily influenced from the activity recognition 
 As only sequences with a single label are considered in this experiment, a voting procedure is used
 to aggregate predictions for individual time steps to produce the final classification for both
 the Random Forest and Structured Perceptron. Note that this gives an unfair advantage to these
-models as in a real world activity classification setting, one would not a priori have knowledge of
+models. In a real world activity classification setting one would not a priori have knowledge of
 the bounds (segmentation) over which to aggregate votes.
 
 \subsection{Baseline from Literature}
 Decomposition of a temporal classification problem into a series 
-of fixed size iid decisions is a common approach to activity recognition
-in the literature. \cite{ms-activity} first derive a series of standard features
-from the raw sensor data, and then apply a \ac{SVM} to fixed size windows in a similar problem. 
-Significantly better results were obtained on the data considered here using a Random Forest 
-rather than a \ac{SVM} and only the former is reported here. This discrepancy is likely due 
-to \cite{ms-activity} utilizing a number of heuristic feature partitioning schemes which were 
-not able to be replicated in this work.
+of fixed size \ac{iid} decisions is a common approach to activity recognition
+in the literature. The approach in \cite{ms-activity} is to first derive a series of 
+standard features from the raw sensor data. A \ac{SVM} is then applied to overlapping 
+fixed size windows consisting of several seconds of sensors. Significantly better results were 
+obtained on the data considered here using a Random Forest rather than a \ac{SVM}, 
+and only the former is reported here. This discrepancy is likely due to \cite{ms-activity} 
+utilizing a number of heuristic feature partitioning schemes which were not able to be replicated in this work.
 \\\\
 The following features were computed over 4 second windows (60 timesteps)
 for each of the 3 accelerometer and 3 gyroscope axis:
@@ -1269,7 +1255,7 @@ Best performing settings on the validation set are noted in bold.
 
 \subsection{Structured Perceptron}
 The Structured Perceptron is a discriminative analog of a \ac{HMM}. 
-It is worth noting this statement is somewhat tenuous, and it could 
+It is worth noting this claim is somewhat tenuous, and it might 
 be considered more appropriate to say this is only true of the closely 
 related \ac{CRF}, which models $P(Y|X)$ as opposed to a \ac{HMM} 
 which models $P(Y,X)$. Regardless, both are chain structured discriminative 
@@ -1277,7 +1263,7 @@ models which avoid the local normalization problems, \emph{label bias}, associat
 with \acp{HMM} and \acp{MEMM} \cite{lafferty-crf}. 
 \\\\
 Despite avoiding the label bias problem, the gradient based algorithms frequently
-used for training such models do not easily extend to models with latent varaiables. 
+used for training such models do not easily extend to models with latent variables. 
 As latent variables offer a significant amount of flexibility this is a potential
 drawback for such models.
 \\\\
@@ -1300,10 +1286,13 @@ parameter estimation of the component \acp{CHMM} can be carried
 out independently. Two methods of parameter estimation are considered. 
 \\\\
 The first method searches for \ac{MAP} parameters using Viterbi Training 
-\cite{segmental-kmeans}. This criteria was found to perform slightly better than the 
-typical \ac{EM} approach for estimating \ac{HMM} parameters. Recent work 
-provides both empirical and theoretical support for this observation, especially when fitting 
-highly misspecified models, and/or in cases in which the final performance will be measured using 
+\cite{segmental-kmeans}. Viterbi Training seeks model parameters which maximize 
+the probabilities of the most likely latent sequences given the observed sequences, 
+rather than parameters that maximize the probability of the observed sequences as is done
+in classical \ac{EM}. This criteria was found to perform slightly better than the typical 
+\ac{EM} approach for estimating \ac{HMM} parameters. Recent work provides both empirical 
+and theoretical support for this observation, especially when fitting highly misspecified models, 
+and/or in cases in which the final performance will be measured using 
 the MAP state sequence. For further discussion on this subject we defer the interested reader 
 to Sections 7 and 8 of \cite{viterbi-em} as well as \cite{estimate-wrong}.
 \\\\
@@ -1359,9 +1348,18 @@ the Random Forest, largely by reducing the complexity of the individual ensemble
 in all cases this resulted in decreased test performance.
 
 \chapter{Segmenting Exercises}
-The above strong performing baseline has the disadvantage that it requires ground truth
-segmentations. The system presented for segmentation in the synthetic experiments section
-can perform this segmentation in an unsupervised manner without ground truth annotations.
+The strong performing baseline classifier from Chapter~\ref{chp:segment-class} has the disadvantage 
+that it requires ground truth segmentations. In contrast the \ac{CHMM} system presented for segmentation
+in Section~\ref{sec:art-seg} can perform this segmentation in an unsupervised manner. Doing so simply
+requires inspection of the latent state sequences. Portions of the sequence corresponding to the 
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=1\textwidth]{img/annot_error_activity_202928.pdf}
+    \caption{Example annotation error.}
+    \label{fig:annot-arror}
+\end{figure}
+
 
 \chapter{Simultaneous Segmentation and Classification of Exercises}
 This chapter focuses on the most difficult case where the time series $\seq{x}{1}{T}$
@@ -1399,7 +1397,8 @@ The total error for the entire sequence is then the error of the individual $s$ 
 \textbf{Edit Distance:} Treat each homogeneous region as a single symbol and compute the edit
 distance between the resulting ground truth and predicted strings.
 
-\begin{acronym}
+\section*{Acronyms}
+\begin{acronym}[XXXXXX]
     \acro{DBN}{Dynamic Bayesian Network}
     \acro{HMM}{Hidden Markov model}
     \acro{CHMM}{Cyclic Hidden Markov Model}
@@ -1416,9 +1415,10 @@ distance between the resulting ground truth and predicted strings.
     \acro{MCMC}{Markov Chain Monte Carlo}
     \acro{NLP}{Natural Language Processing}
     \acro{AMI}{Adjusted Mutual Information}
+    \acro{iid}{independent and identically distributed}
 \end{acronym}
 
-\bibliographystyle{alpha}
+\bibliographystyle{plain}
 \bibliography{tllake.thesis}
 
 \end{document}
