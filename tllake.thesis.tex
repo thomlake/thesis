@@ -158,11 +158,107 @@ I want to thank my advisor Elise deDoncker and Robert Trenary for all their supp
     \acro{NLP}{Natural Language Processing}
     \acro{AMI}{Adjusted Mutual Information}
     \acro{iid}{independent and identically distributed}
+    \acro{HAR}{Human Activity Recognition}
 \end{acronym}
+
+\cleardoublepage
+% \phantomsection
+\addcontentsline{toc}{chapter}{Notation}
+\chapter*{Notation}
+As this thesis deals almost exclusively with time series, $t$ will always
+be used as a time index and $T$ as the length of the time series.
+A sequence from time $t_1$ to $t_2$ is denoted by
+$\seq{x}{t_1}{t_2} = (x_{t_1}, x_{t_1 + 1}, \ldots, x_{t_2})$.
+Following this notation the entire sequence is denoted $\seq{x}{1}{T}$.
+\\\\
+Random variables are denoted by uppercase letters $X$, $Y$
+and the values these variables take by the corresponding lower case
+letter $x$, $y$. The probability that a particular random variable $X$
+takes a value $x$ is denoted $P(X=x)$, and $P(X=x \mid Y=y)$ denotes
+the conditional probability that $X=x$ given the value of some other variable $Y=y$.
+If clear from context the uppercase letter will be omitted and the previous expressions
+will simply be written $P(x)$ and $P(x \mid y)$. If $x$ is distributed according to some
+distribution $\SomeDist$ with parameters $\theta$ we write $x \sim \SomeDist(\theta)$.
+Common abbreviations are used for well known parametric probability distributions,
+Table~\ref{table:distributions}.
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l l}\hline
+    \textbf{Distribution} & \textbf{Abbreviation}\\\hline
+    Categorical & $\Cat$ \\
+    Geometric & $\Geom$ \\
+    Uniform & $\Unif$ \\
+    Beta & $\Beta$ \\
+    Dirichlet & $\Dir$ \\
+    Normal & $\Norm$ \\
+    \end{tabular}
+    \caption[Distributions]{Distribution abbreviations.}
+    \label{table:distributions}
+\end{table}
 
 
 \chapter{Introduction}
+\label{chap:Introduction}
 Words words words
+
+\section{The Case for Structure}
+
+\section{Applications}
+
+\section{Organization}
+The remainder of this thesis is organized as follows:
+\begin{quote}
+    Chapter \ref{chap:Analyzing Human Activity with Sensors} reviews existing
+    applications of sensors based human activity analysis with a focus on the
+    activity recognition domain.
+\end{quote}
+
+\begin{quote}
+    Chapter \ref{chap:Activity Data} describes the dataset used
+    for the real world experiments presented in this thesis.
+    This includes both the methodologies used for data collection,
+    and labeling schemes developed to support subsequent experiments.
+\end{quote}
+
+\begin{quote}
+    Chapter \ref{chap: Hidden Markov Models} provides relevant background
+    related to Hidden Markov Models and the more general Dynamic Bayesian Network
+    framework. This chapter also introduces a novel Bayesian Nonparametric extension
+    of Mixtures of Hidden Markov Models.
+\end{quote}
+
+\begin{quote}
+    Chapter \ref{chap: A Generative Model for Repetitive Sequences} introduces
+    a structured Hidden Markov Model variant which is particularly well suited
+    to the types of problems explored in this thesis.
+\end{quote}
+
+\begin{quote}
+    Chapter \ref{chap:Synthetic experiments with Hidden Markov Model} presents
+    synthetic experiments which are intended to explore the capabilities of the
+    novel techniques introduced in Chapter~\ref{chap: Hidden Markov Models} and
+    \ref{chap: A Generative Model for Repetitive Sequences}.
+\end{quote}
+
+
+
+\chapter{Analyzing Human Activity with Sensors}
+\label{chap:Analyzing Human Activity with Sensors}
+The availability of small low cost microprocessors and sensors has
+enabled the creation of numerous wearable devices for research, industrial,
+and commercial applications. These applications target a diverse set of domains
+including fitness~\cite{long-term-devices},
+health status monitoring~\cite{elderly}~\cite{health-survey},
+and workplace safey~\cite{assembly-activity}.
+Despite the variety of applications, a common underlying theme to most of these
+works is \ac{HAR}, the act of identifying what activity the wearer is engaged in at a given time.
+Upon further consideration this is to be expected, the ability of a system to provide
+meaningful output is dependent the ability to \emph{understand} of current context.
+
+\section{The Human Activity Recognition Task}
+The \ac{HAR} task can be formally defined as follows: Let $\seq{x}{1}{T}$ be
+a sequence of possibly multivariate observations with $x_t \in \mathcal{X}$.
+
 
 \section{Related Work}
 \textbf{TODO:} This Section obviously needs work. Have references
@@ -179,13 +275,14 @@ of exercises using an arm mounted accelerometer and gyroscope (their sensors wer
 near the elbow rather than the wrist).
 
 \chapter{Activity Data}
+\label{chap:Activity Data}
 Since there does not exist publicly available sensor data for the target domain, a privately funded
 large annotated dataset of different people performing a variety of exercises was utilized.
 Each instance in this dataset consists of contiguous sensor readings of a user performing a
 series of exercises (a \emph{routine}), where each exercise is separated by non-exercise activities
 which includes activities such as stretching, drinking water, setting up  equipment or recovery.
-Any non-exercise activity is referred to uniformly as \emph{rest} and denoted with the label
-$\varnothing$ where applicable, Table~\ref{table:dataset}.
+Any non-exercise activity is referred to as \emph{rest} throughout. Table~\ref{table:dataset} summarizes
+the dataset.
 
 \begin{table}[ht]
     \centering
@@ -261,31 +358,13 @@ and
 \]
 
 \chapter{Hidden Markov Models}
+\label{chap: Hidden Markov Models}
 \acp{HMM} \cite{rabiner-hmms} are a common theme throughout this thesis.
 In the spirit of self containment this chapter introduces common terminology,
 methods and inference algorithms employed when working with \acp{HMM}. In particular
 the focus is on Bayesian methods. For a more standard introduction see Kevin Murphy's excellent thesis
 \cite{murphy-thesis}, which also discusses the more general class of probabilistic models
 known as \acp{DBN}, of which \acp{HMM} and the popular Kalman filter \cite{kalman-filter}, are a member.
-
-\section{Notation}
-Standard notation used throughout is reviewed here.
-Random variables are denoted by uppercase letters $X$, $Y$
-and the values these variables take by the corresponding lower case
-letter $x$, $y$. The probability that a particular random variable $X$
-takes a value $x$ is denoted $P(X=x)$, and $P(X=x \mid Y=y)$ denotes
-the conditional probability that $X=x$ given the value of some other variable $Y=y$.
-If clear from context the uppercase letter will be omitted and the previous expressions
-will simply be written $P(x)$ and $P(x \mid y)$. If $x$ is distributed according to some
-distribution $\SomeDist$ with parameters $\theta$ we write $x \sim \SomeDist(\theta)$.
-The Uniform, Bernoulli, Categorical, Dirichlet, and Normal distribution are denoted by
-$\Unif$, $\Bern$, $\Cat$, $\Dir$, and $\Norm$ respectively.
-\\\\
-As this thesis deals almost exclusively with time series, $t$ will always
-be used as a time index and $T$ as the length of the time series.
-A sequence from time $t_1$ to $t_2$ is denoted by
-$\seq{x}{t_1}{t_2} = (x_{t_1}, x_{t_1 + 1}, \ldots, x_{t_2})$.
-Following this notation the entire sequence is denoted $\seq{x}{1}{T}$.
 
 \section{Introduction to Hidden Markov Models}
 \label{sec:Introduction to Hidden Markov Models}
@@ -855,6 +934,7 @@ can be neglected when calculating the acceptance ratio of the Metropolis within 
 
 
 \chapter{A Generative Model for Repetitive Sequences}
+\label{chap: A Generative Model for Repetitive Sequences}
 A significant advantage of \acp{PGM} over popular discriminative Machine Learning methods
 such as \acp{SVM}, Random Forests, and Neural Networks, is the ability to easily incorporate
 structured knowledge via latent variables and conditional dependencies into the models
@@ -1024,7 +1104,9 @@ This reduction in parameters should require less data to estimate,
 and reduces the computational complexity of typical inference tasks such as
 filtering, smoothing, and decoding from $O(TK^2)$ to $O(TK)$.
 
+
 \chapter{Synthetic experiments with Hidden Markov Model}
+\label{chap:Synthetic experiments with Hidden Markov Model}
 This chapter describes several synthetic experiments carried out utilizing the models and
 inference procedures developed in the previous Chapters. The focus on synthetic data
 is primarily intended as a demonstration and exploration of model aptitude. Experiments
