@@ -108,7 +108,7 @@
 \chapter*{Disclaimer}
 This document describes privately funded research intended
 for commercial use. Any redistribution of this document or the material
-contained within without express written consent of the author (tllake)
+contained within without express written consent of the author, Thom L. Lake,
 is in direct violation of terms agreed upon before receiving this document.
 
 \chapter*{Abstract}
@@ -179,8 +179,8 @@ the conditional probability that $X=x$ given the value of some other variable $Y
 If clear from context the uppercase letter will be omitted and the previous expressions
 will simply be written $P(x)$ and $P(x \mid y)$. If $x$ is distributed according to some
 distribution $\SomeDist$ with parameters $\theta$ we write $x \sim \SomeDist(\theta)$.
-Common abbreviations are used for well known parametric probability distributions,
-Table~\ref{table:distributions}.
+Common abbreviations used for well known parametric probability distributions are listed
+in Table~\ref{table:distributions}.
 \begin{table}[ht]
     \centering
     \begin{tabular}{l l}\hline
@@ -241,7 +241,6 @@ The remainder of this thesis is organized as follows:
 \end{quote}
 
 
-
 \chapter{Analyzing Human Activity with Sensors}
 \label{chap:Analyzing Human Activity with Sensors}
 The availability of small low cost microprocessors and sensors has
@@ -250,17 +249,133 @@ and commercial applications. These applications target a diverse set of domains
 including fitness~\cite{long-term-devices},
 health status monitoring~\cite{elderly}~\cite{health-survey},
 and workplace safey~\cite{assembly-activity}.
-Despite the variety of applications, a common underlying theme to most of these
+Despite the variety of applications a common underlying theme to most of these
 works is \ac{HAR}, the act of identifying what activity the wearer is engaged in at a given time.
-Upon further consideration this is to be expected, the ability of a system to provide
-meaningful output is dependent the ability to \emph{understand} of current context.
+Upon further consideration this is to be expected; the ability of a system to provide
+meaningful output is dependent on the ability to \emph{understand} the current context.
+Informally a \ac{HAR} system can be described as a mapping from sequential
+input data to an ordered list of activities. The specifics of the input data, as well
+as the type and granularity of the recognized activities, varies greatly from system to system.
 
-\section{The Human Activity Recognition Task}
-The \ac{HAR} task can be formally defined as follows: Let $\seq{x}{1}{T}$ be
-a sequence of possibly multivariate observations with $x_t \in \mathcal{X}$.
+\section{Sensors}
+\label{sec:Sensors}
+\ac{HAR} systems have been designed to work with numerous input sources including
+video \cite{har-vision-survey},
+audio \cite{assembly-activity},
+RFID \cite{har-video-rfid},
+location, temperature, and motion sensors \cite{har-survey},
+or combinations thereof.
+Keeping in line with much of the \ac{HAR} literature,
+the focus of this work shall be on wearable sensor based systems,
+in particular systems utilizing accelerometers and gyroscopes \cite{multiple-sensor-bao}
+as input. In addition to sensor type, systems vary both in body location
+and the number of locations used. As an extreme example of location proliferation,
+\cite{many-sensor-locations} presents a system composed of twelve devices attached
+at distinct locations.
+\\\\
+From an implementation perspective there are obvious advantages to using a
+variety of sensors placed at a number of different locations on the body. Multiple
+locations allow a more complete \emph{picture} of the activity being performed,
+especially since the motion associated with an activity may be isolated to a
+single limb or portion of the body, e.g., writing or riding a bike. However, if such
+systems are to be actually utilized, requiring a user to attach multiple devices to
+different body locations is likely impractical and obtrusive \cite{har-survey}.
 
+\section{Activities}
+\label{sec:Activities}
+Given the various application domains targeted by \ac{HAR} systems it is not surprising
+that the definition of \emph{activity} adopted by these systems varies greatly as well.
+To frame the current work in the context of the broader \ac{HAR} literature systems will
+be divided into two categories based on activity specificity.
+\\\\
+On one end of the spectrum are systems which recognize broad category daily activities
+such as walking, driving, making a phone call, or watching TV. Activities in this group
+typically hava a duration of a few minutes to several hours, and can largely be characterized
+by general levels of motion rather than a single precise movement.
 
-\section{Related Work}
+\section{Problem Formalization}
+The \ac{HAR} task will be formally defined as follows: Let $\seq{x}{1}{T}$ be
+a sequence of possibly multivariate observations with $x_t \in \mathcal{X}$,
+and $\mathcal{Y}$ be a finite set of activities\footnote{For example,
+if $\seq{x}{1}{T}$ is a sequence of readings from a triaxial accelerometer
+then $\mathcal{X} = \mathbf{R}^3$.}. Then the output of a \ac{HAR}
+system is a sequence $\seq{y}{1}{T}$ with $y_t \in \mathcal{Y}$ such that $y_t$
+is the activity being performed at time $t$.
+\\\\
+The definition presented above is the most general output one could
+expect from a \ac{HAR} system, and specific \ac{HAR} tasks present in the literature
+can be seen as special cases or transformations of the output. For example if,
+one only wishes to account for the amount of time spent performing each activity,
+if suffices to set
+\[
+    s_y = \sum_t \1\{y_t = y\}
+\]
+for each $y \in \mathcal{Y}$. As another example, Algorithm~\ref{alg:har-list} may be
+used to obtain an ordered list of the activities performed from the output $\seq{y}{1}{T}$
+descibed above.
+\begin{algorithm}[H]
+    \caption{\ac{HAR} Activity List.\label{alg:har-list}}
+    \begin{algorithmic}[1]
+        \Require{$\seq{y}{1}{T}$ a sequence of activity predictions from time $1$ to $T$.}
+        \State $S \gets \texttt{stack()}$
+        \State $\texttt{push}(S, y_1)$
+        \For{$t \gets 2, \ldots, T$}
+            \If{$\texttt{last}(S) \neq y_t$}
+                \State $\texttt{push}(S, y_t)$
+            \EndIf
+        \EndFor
+        \State \Return{$S$}
+    \end{algorithmic}
+\end{algorithm}
+
+\section{Existing Approaches}
+Most approaches to \ac{HAR} in the literature fall within the
+supervised Machine Learning framework \cite{har-survey}, i.e.,
+sensor sequences are paired with label sequences denoting the activity
+being done at each point in time. There input data and activities recognized
+vary greatly from work to work.
+
+Within the supervised framework it is
+common to decompose the temporal \ac{HAR} problem into a series of
+fixed size independent decisions problems
+\cite{assembly-activity}
+\cite{tutorial-bulling}
+\cite{phone-kwapisz},
+which will be referred to as \emph{windowing}.
+The typical windowing setup proceeds as follows:
+\begin{itemize}
+    \item Split the sequence into a series of fixed size possibly overlapping windows
+          of size $\omega$, $w_1, w_2, \ldots, w_n$, $w_i = \seq{x}{t}{t + \omega}$.
+    \item Map each window $w_i$ to a corresponding feature vector $\phi(w_i)$.
+    \item For each $i$ use any classification algorithm to predict the activity occurring
+          within the window, $\hat{y}_i = f(\phi(w_i))$.
+\end{itemize}
+There are many advantages to a windowed approach to sequential classification problems.
+Most notably, using a fixed sized window as input allows one to sidestep the need to deal
+explicitly with the temporal aspects of the problem. This frees the practitioner
+to leverage the vast array of classification techniques suitable only for static
+inputs. Another advantage of windowing is it allows predictions to be obtained in
+a near realtime manner, as prediction lag is only fundamentally limited by the size
+of the window. This is in contrast with classification methods intended to work with
+sequential data, which typically involve some sort of inference procedure to handle
+temporal dependencies between observations and/or predictions.
+\\\\
+Despite the advantages of windowing, neglecting the sequential nature of the problem
+is the largest drawback of the approach. As only a small window is available
+to the classifier, context outside this window is unavailable, rendering
+the predicted activity of each window independent. Furthermore, because the
+window size $\omega$ must fixed a priori, an activity which requires more than this time
+to be identified will potentially fail to be recognized as accurately.
+
+\section{Exercise Classification}
+Exercise classification is a subdomain of the larger \ac{HAR} field.
+
+The approach in \cite{ms-activity} is to first derive a series of
+standard features from the raw sensor data. A \ac{SVM} is then applied to overlapping
+fixed size windows consisting of several seconds of sensors. Significantly better results were
+obtained on the data considered here using a Random Forest rather than a \ac{SVM},
+and only the former is reported here. This discrepancy is likely due to \cite{ms-activity}
+utilizing a number of heuristic feature partitioning schemes which were not able to be replicated in this work.
 \textbf{TODO:} This Section obviously needs work. Have references
 (\cite{ms-overview},
 \cite{arm-worn-muehlbauer},
@@ -269,7 +384,6 @@ a sequence of possibly multivariate observations with $x_t \in \mathcal{X}$.
 \cite{multiple-sensor-bao},
 \cite{taylor-crbm-2006}) need to write.
 
-\section{Exercise Classification}
 Like this work, \cite{ms-activity} apply Machine Learning methods to segment, classify, and count repetitions
 of exercises using an arm mounted accelerometer and gyroscope (their sensors were mounted on the forearm
 near the elbow rather than the wrist).
@@ -1096,7 +1210,7 @@ discrete symbols, Figure~\ref{fig:cyclic-hmm}.
 This basic, and surprisingly simple model is elaborated in various ways to solve a
 number of synthetic and real world tasks related to motion recognition in the following chapters.
 Not only does the \ac{CHMM} inherently capture the repetitive nature of exercise, but due to the
-highly structured transition distribution a\ac{CHMM} with $K$ states only has $O(K)$ transition
+highly structured transition distribution a \ac{CHMM} with $K$ states only has $O(K)$ transition
 parameters\footnote{A \ac{CHMM} with $K$ states has exactly $2K$ transition parameters.}.
 This is unlike a \ac{HMM} in which every state can transition
 to every other state which has $O(K^2)$ transition parameters.
@@ -1105,7 +1219,7 @@ and reduces the computational complexity of typical inference tasks such as
 filtering, smoothing, and decoding from $O(TK^2)$ to $O(TK)$.
 
 
-\chapter{Synthetic experiments with Hidden Markov Model}
+\chapter{Synthetic experiments with Hidden Markov Models}
 \label{chap:Synthetic experiments with Hidden Markov Model}
 This chapter describes several synthetic experiments carried out utilizing the models and
 inference procedures developed in the previous Chapters. The focus on synthetic data
