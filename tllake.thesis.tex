@@ -372,20 +372,23 @@ The typical windowing setup proceeds as follows:
     \item For each $i$ use any classification algorithm to predict the activity occurring
           within the window, $\hat{y}_i = f(\phi(w_i))$.
 \end{itemize}
-A variety of feature mappings have been proposed in the literature, most based on standard
-techniques for time series classification. The most common are described below. For ease of
-exposition the input will be assumed to be a one dimensional real valued time series and the
-features computed over a window spanning from time $1$ to $n$. Generalization to multiple
-dimensions and arbitrary windows from $t$ to $t + n$ is straightforward.
+A variety of features, $\phi(w_i)$, have been proposed in the literature.
+The most common are described below. For ease of exposition the input will be assumed
+to be a one dimensional real valued time series and the features computed over the
+first window spanning from time $1$ to $n$. Generalization to multiple dimensions and
+other window size and positions is straightforward.
 \begin{align*}
     \intertext{\textbf{Mean and Variance:}} \\
     \mu &= \frac{1}{n}\sum_{t=1}^n x_t \\
     \sigma^2 &= \frac{1}{n-1} \sum_{t=1}^n (x_t - \mu)^2 \\
     \intertext{\textbf{Root Mean Square:}} \\
-    \text{RMS} &= \sqrt{\frac{1}{n} \sum_{t=1}^n x_t^2}
-    
+    \text{RMS} &= \sqrt{\frac{1}{n} \sum_{t=1}^n x_t^2} \\
+    \intertext{\textbf{Autocorrelation:} (lag $k$)} \\
+    a_k &= \frac{1}{(n-k)\sigma^2} \sum_{t=1}^{n-k}(x_t - \mu)(x_{t+k} - \mu) \\
+    \intertext{\textbf{Energy:}} \\
+    E &= \frac{1}{n} \sum_{t=1}^n F_i^2\\
+    \intertext{where $F_i$ is the $i^{th}$ component of the Fourier transform of $x$.}
 \end{align*}
-
 
 There are many advantages to a windowed approach to sequential classification problems.
 Most notably, using a fixed sized window as input allows one to sidestep the need to deal
@@ -403,7 +406,7 @@ to the classifier, context outside this window is unavailable, rendering
 the predicted activity of each window independent. Furthermore, because the
 window size $\omega$ must fixed a priori, an activity which requires more than this time
 to be identified will potentially fail to be recognized as accurately.
-\\\
+
 
 \section{Existing Approaches}
 Most approaches to \ac{HAR} in the literature fall within the
