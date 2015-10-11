@@ -258,40 +258,69 @@ input data to an ordered list of activities. The specifics of the input data, as
 as the type and granularity of the recognized activities, varies greatly from system to system.
 
 \section{Sensors}
-\label{sec:Sensors}
+\label{sec:HAR-Sensors}
 \ac{HAR} systems have been designed to work with numerous input sources including
 video \cite{har-vision-survey},
 audio \cite{assembly-activity},
 RFID \cite{har-video-rfid},
-location, temperature, and motion sensors \cite{har-survey},
+location, temperature, motion sensors \cite{har-survey},
 or combinations thereof.
 Keeping in line with much of the \ac{HAR} literature,
 the focus of this work shall be on wearable sensor based systems,
 in particular systems utilizing accelerometers and gyroscopes \cite{multiple-sensor-bao}
 as input. In addition to sensor type, systems vary both in body location
-and the number of locations used. As an extreme example of location proliferation,
-\cite{many-sensor-locations} presents a system composed of twelve devices attached
-at distinct locations.
+and the number of locations used.
 \\\\
 From an implementation perspective there are obvious advantages to using a
 variety of sensors placed at a number of different locations on the body. Multiple
-locations allow a more complete \emph{picture} of the activity being performed,
+locations allow a more complete picture of the activity being performed,
 especially since the motion associated with an activity may be isolated to a
 single limb or portion of the body, e.g., writing or riding a bike. However, if such
 systems are to be actually utilized, requiring a user to attach multiple devices to
 different body locations is likely impractical and obtrusive \cite{har-survey}.
+As an extreme example of location proliferation, \cite{many-sensor-locations} presents a
+system composed of twelve devices attached at distinct locations.
 
 \section{Activities}
-\label{sec:Activities}
+\label{sec:HAR-Activities}
 Given the various application domains targeted by \ac{HAR} systems it is not surprising
 that the definition of \emph{activity} adopted by these systems varies greatly as well.
 To frame the current work in the context of the broader \ac{HAR} literature systems will
 be divided into two categories based on activity specificity.
 \\\\
 On one end of the spectrum are systems which recognize broad category daily activities
-such as walking, driving, making a phone call, or watching TV. Activities in this group
-typically hava a duration of a few minutes to several hours, and can largely be characterized
-by general levels of motion rather than a single precise movement.
+such as walking, driving, making a phone call, or watching TV \cite{multiple-sensor-bao}.
+Activities in this group typically last for a few minutes to several hours,
+and can largely be characterized by general levels of motion rather than a precise
+series of movements. A useful feature of such broad categories is that a wearer's day
+can in theory be segmented into a series of such activities, allowing for a comprehensive
+analysis of general lifestyle patterns. Unfortunately, broad categories have the disadvantage
+of being plagued by ambiguity, non-mutual exclusivity, and intra-category variability.
+\cite{multiple-sensor-bao} use 20 broad categories including Watching TV, Walking,
+Running, and Folding Laundry. Given these categories: What is the correct classification of
+someone folding laundry while watching TV? At what speed does one stop walking and begin running?
+Is a jogger walking or running? The answers to such questions will largely depend on the target
+domain and fundamentally rule out certain post-hoc analysis \cite{ms-overview}.
+\\\\
+On the other end of the spectrum are systems with narrow activity categories.
+A common example from the literature, and the one explored in this work,
+is that of Exercise classification \cite{ms-activity}. Within this regime activities
+last for much briefer periods of time, on the order of seconds to minutes. Furthermore,
+there is little chance for category ambiguity as categories are sufficiently narrow
+to avoid many of problems associated with broad categories mentioned above. However,
+narrow categories are not without problems. The most obvious is that it requires either
+the definition of an unreasonably large number of categories, or the introduction of a
+\emph{none of these} type category. The former is problematic both from a computational
+and dearth of data perspective, while the later will be plagued by problems associated
+with class imbalance \cite{class-imbalance}. Recognizing narrow category activity is
+closely related to the of Gesture Recognition \cite{gesture-recognition}.
+\\\\
+Several works have focused on crossing the boundaries between broad and narrow
+categories using either an implicit or explicit hierarchical decomposition of activities
+\cite{hierarchical-thesis}, \cite{factored-hmm-tran}. In this framework, potentially shared,
+ narrow activities are combined to form broad activities. To date, these systems do not use
+ a number of broad activities that would be necessary to fully segment an entire day
+ into activity categories.
 
 \section{Problem Formalization}
 The \ac{HAR} task will be formally defined as follows: Let $\seq{x}{1}{T}$ be
@@ -312,7 +341,7 @@ if suffices to set
 \]
 for each $y \in \mathcal{Y}$. As another example, Algorithm~\ref{alg:har-list} may be
 used to obtain an ordered list of the activities performed from the output $\seq{y}{1}{T}$
-descibed above.
+desrcibed above.
 \begin{algorithm}[H]
     \caption{\ac{HAR} Activity List.\label{alg:har-list}}
     \begin{algorithmic}[1]
@@ -328,15 +357,8 @@ descibed above.
     \end{algorithmic}
 \end{algorithm}
 
-\section{Existing Approaches}
-Most approaches to \ac{HAR} in the literature fall within the
-supervised Machine Learning framework \cite{har-survey}, i.e.,
-sensor sequences are paired with label sequences denoting the activity
-being done at each point in time. There input data and activities recognized
-vary greatly from work to work.
-
-Within the supervised framework it is
-common to decompose the temporal \ac{HAR} problem into a series of
+\section{Windows and Features}
+The \ac{HAR} problem if commonly decomposed into a series of
 fixed size independent decisions problems
 \cite{assembly-activity}
 \cite{tutorial-bulling}
@@ -345,20 +367,35 @@ which will be referred to as \emph{windowing}.
 The typical windowing setup proceeds as follows:
 \begin{itemize}
     \item Split the sequence into a series of fixed size possibly overlapping windows
-          of size $\omega$, $w_1, w_2, \ldots, w_n$, $w_i = \seq{x}{t}{t + \omega}$.
+          of size $n$, $w_1, w_2, \ldots, w_m$, $w_i = \seq{x}{t}{t + n}$.
     \item Map each window $w_i$ to a corresponding feature vector $\phi(w_i)$.
     \item For each $i$ use any classification algorithm to predict the activity occurring
           within the window, $\hat{y}_i = f(\phi(w_i))$.
 \end{itemize}
+A variety of feature mappings have been proposed in the literature, most based on standard
+techniques for time series classification. The most common are described below. For ease of
+exposition the input will be assumed to be a one dimensional real valued time series and the
+features computed over a window spanning from time $1$ to $n$. Generalization to multiple
+dimensions and arbitrary windows from $t$ to $t + n$ is straightforward.
+\begin{align*}
+    \intertext{\textbf{Mean and Variance:}} \\
+    \mu &= \frac{1}{n}\sum_{t=1}^n x_t \\
+    \sigma^2 &= \frac{1}{n-1} \sum_{t=1}^n (x_t - \mu)^2 \\
+    \intertext{\textbf{Root Mean Square:}} \\
+    \text{RMS} &= \sqrt{\frac{1}{n} \sum_{t=1}^n x_t^2}
+    
+\end{align*}
+
+
 There are many advantages to a windowed approach to sequential classification problems.
 Most notably, using a fixed sized window as input allows one to sidestep the need to deal
 explicitly with the temporal aspects of the problem. This frees the practitioner
 to leverage the vast array of classification techniques suitable only for static
 inputs. Another advantage of windowing is it allows predictions to be obtained in
 a near realtime manner, as prediction lag is only fundamentally limited by the size
-of the window. This is in contrast with classification methods intended to work with
-sequential data, which typically involve some sort of inference procedure to handle
-temporal dependencies between observations and/or predictions.
+of the window. This is in contrast with classification methods designed specifically
+to work with sequential data, which typically involve some sort of inference procedure
+to handle temporal dependencies between observations and/or predictions.
 \\\\
 Despite the advantages of windowing, neglecting the sequential nature of the problem
 is the largest drawback of the approach. As only a small window is available
@@ -366,10 +403,15 @@ to the classifier, context outside this window is unavailable, rendering
 the predicted activity of each window independent. Furthermore, because the
 window size $\omega$ must fixed a priori, an activity which requires more than this time
 to be identified will potentially fail to be recognized as accurately.
+\\\
 
-\section{Exercise Classification}
-Exercise classification is a subdomain of the larger \ac{HAR} field.
-
+\section{Existing Approaches}
+Most approaches to \ac{HAR} in the literature fall within the
+supervised Machine Learning framework \cite{har-survey}, i.e.,
+sensor sequences are paired with label sequences denoting the activity
+being done at each point in time. Within The supervised framework a variety
+of classification techniques have been applied.
+\\\\
 The approach in \cite{ms-activity} is to first derive a series of
 standard features from the raw sensor data. A \ac{SVM} is then applied to overlapping
 fixed size windows consisting of several seconds of sensors. Significantly better results were
