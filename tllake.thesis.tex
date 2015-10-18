@@ -203,7 +203,7 @@ in Table~\ref{table:distributions}.
 Uncovering the underlying structure giving rise to a set of observations is a
 fundamental theme in Machine Learning. The canonical representation of this structure
 is the \ac{PGM}. The inclusion or exclusion of edges in a \ac{PGM} explicitly imposes
-structural relationships amongst variables and controls the ways in which they may interact.
+structural relationships among variables and controls the ways in which they may interact.
 Considerable attention has been given to the problem of automated structure discovery.
 Algorithms for structure discovery typically start as a blank slate, attempting to induce structure
 from observations alone.
@@ -336,7 +336,7 @@ enabled the creation of numerous wearable devices for research, industrial,
 and commercial applications. These applications target a diverse set of domains
 including fitness~\cite{long-term-devices},
 health status monitoring~\cite{elderly,health-survey},
-and workplace safey~\cite{assembly-activity}.
+and workplace safety~\cite{assembly-activity}.
 Despite the variety of applications a common underlying theme to most of these
 works is \ac{HAR}, the act of identifying what activity the wearer is engaged in at a given time.
 Upon further consideration this is to be expected; the ability of a system to provide
@@ -429,7 +429,7 @@ if suffices to set
 \]
 for each $y \in \mathcal{Y}$. As another example, Algorithm~\ref{alg:har-list} may be
 used to obtain an ordered list of the activities performed from the output $\seq{y}{1}{T}$
-desrcibed above.
+described above.
 \begin{algorithm}[H]
     \caption{\ac{HAR} Activity List.\label{alg:har-list}}
     \begin{algorithmic}[1]
@@ -515,13 +515,13 @@ The closest work in terms of domain and scope to that presented here is~\cite{ms
 Like this work, they work within the exercise classification domain utilizing data
 from 96 participants for 26 exercises collected from a single device attached to the
 participant's arm. Although they collected data for 26 activities,
-results are only presented for discrimination amongst 13 different
+results are only presented for discrimination among 13 different
 exercises (this work presents experiments using 50 exercises). Their focus is on the development
 and validation of an end-to-end realtime classification system, while this work focuses primarily on
 several tasks related to the development of such a system. Their full system is based on a three
 stage pipeline consisting of: segmentation, classification, and repetition counting. The segmentation
 and classification systems are essentially the same, differing only slightly in features used and the
-former being a binary classifier and the later being a mult-class classifier. The classifier used
+former being a binary classifier and the later being a multi-class classifier. The classifier used
 in both cases is a \ac{SVM} operating over 5 second windows. Their repetition counting procedure
 is based on a heuristic peak counting algorithm.
 \\\\
@@ -1007,7 +1007,7 @@ for \acp{HMM} in~\cite{hmm-comparison-johnson}.
     \label{fig:hmm-marg}
 \end{figure}
 The primary difficulty in constructing such a sampler is due to marginalizing over the parameters,
-as doing so introduces dependencies amongst the latent state sequences $\mathcal{Y}$, Figure~\ref{fig:hmm-marg}.
+as doing so introduces dependencies among the latent state sequences $\mathcal{Y}$, Figure~\ref{fig:hmm-marg}.
 Let us proceed in the usual manner for constructing such a Gibbs sampler. We have
 
 \begin{equation}
@@ -1595,7 +1595,7 @@ the correct number of clusters in 80\% of experiments. This is in contrast to th
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{./img/artificial-clusters.pdf}
-    \caption[Visulization of synthetic sequence clusters]{
+    \caption[Visualization of synthetic sequence clusters]{
         Example from each cluster and recurrent structure
         discovered by the Dirichlet Process mixture of HMMs with structured prior.
     }
@@ -1867,7 +1867,7 @@ produced by the \ac{CHMM} and those produced by the exercise observer.
 
 Did you see that stuff in Figure~\ref{fig:actseg}, especially Figure~\ref{fig:actseg:burpee}.
 
-\chapter{Infering Exercise Types and Variations}
+\chapter{Inferring Exercise Types and Variations}
 \label{chap:Infering Exercise Types and Variations}
 The experiments presented in Chapter~\ref{chap:Segmented Exercise Classification}
 and Chapter~\ref{chap:Segmenting Exercises} assume labels for the type of exercises
@@ -1886,21 +1886,21 @@ artificial data in Section~\ref{sec:Clustering Sequences}, is used.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{img/clustering.types/cluster-ami.pdf}
-    \caption{Burpees.}
+    \caption{TODO: a caption.}
     \label{fig:cluster-type-ami}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{img/clustering.types/cluster-correlation.pdf}
-    \caption{Burpees.}
+    \caption{TODO: a caption.}
     \label{fig:cluster-confustion}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{img/clustering.types/cluster-confusion.pdf}
-    \caption{Burpees.}
+    \caption{TODO: a caption.}
     \label{fig:cluster-confustion}
 \end{figure}
 
@@ -1925,43 +1925,6 @@ increase classifier accuracy due to a reduction in intra-class variability.
 
 \chapter{Conclusion}
 \label{chap:Conclusion}
-
-
-\chapter{Simultaneous Segmentation and Classification of Exercises}
-This chapter focuses on the most difficult case where the time series $\seq{x}{1}{T}$
-contains instances of different exercises interleaved with \emph{rest}, i.e., a routine.
-Thus for each time $t = 1,\ldots,T$ there is an associated label
-$a_t \in \{\varnothing\} \cup \{1, \ldots, K\}$ denoting the current activity, and the algorithm
-must output a sequence of labels $\seq{\hat{a}}{1}{T}$.
-Metrics are a problem here as predicting interleaved periods of rest during an exercise
-are extremely harmful to downstream components (like repetition counting and displaying
-information about the entire routine), but are only slightly penalized by something like
-mean hamming distance. Furthermore one needs to correct for labeling every time step with the
-majority class ($\varnothing$). For these reasons I've mostly been resorting to visual
-inspection. Possible options include:
-\\\\
-\textbf{Maximal Overlapping Subsequence:} This isn't something I've found a reference for,
-but which seems quite reasonable. For each homogeneous region $\seq{a}{t_1}{t_2}$ find the
-maximal overlapping predicted subsequence
-
-\begin{align*}
-    \hat{s} &=
-    \arg\max\{t_2^\p - t_1^\p \mid t_1 \le t_1^\p < t_2^\p \le t_2,\; \hat{a}_i = \hat{a}_j,\; t_1^\p \le i,j \le t_2^\p\} \\
-    \err(\hat{s}, \seq{a}{t_1}{t_2}) &= t_1^\p - t_1 + \sum_{i=t_1^\p}^{t_2^\p} \1\{\hat{a}_i = a_i\} + t_2 - t_2^\p.
-\end{align*}
-
-For example
-
-\[\begin{array}{c c c c c c c c c c c c c c}
-    a       &=& [\varnothing,& \varnothing,& 1,& 1,          & 1,& 1,& 1,& \varnothing,& \varnothing,& 2,& 2,& 2] \\
-    \hat{a} &=& [\varnothing,& \varnothing,& 1,& \varnothing,& 1,& 1,& 1,& 1,          & \varnothing,& 2,& 2,& 2] \\
-    \err    &=& [0,          & 0,          & 1,& 1,          & 0,& 0,& 0,& 1,          & 0,          & 0,& 0,& 0] \\
-\end{array}\]
-
-The total error for the entire sequence is then the error of the individual $s$ terms.
-\\\\
-\textbf{Edit Distance:} Treat each homogeneous region as a single symbol and compute the edit
-distance between the resulting ground truth and predicted strings.
 
 \bibliographystyle{plain}
 \bibliography{tllake.thesis}
