@@ -158,7 +158,9 @@ I want to thank my advisor Elise deDoncker and Robert Trenary for all their supp
     \acro{NLP}{Natural Language Processing}
     \acro{AMI}{Adjusted Mutual Information}
     \acro{iid}{independent and identically distributed}
+    \acro{LDA}{Latent Dirichlet Allocation}
     \acro{HAR}{Human Activity Recognition}
+    \acro{pdf}{probability density function}
 \end{acronym}
 
 \cleardoublepage
@@ -198,48 +200,134 @@ in Table~\ref{table:distributions}.
 
 
 \chapter{Introduction}
-\label{chap:Introduction}
-Words words words
+Uncovering the underlying structure giving rise to a set of observations is a
+fundamental theme in Machine Learning. The canonical representation of this structure
+is the \ac{PGM}. The inclusion or exclusion of edges in a \ac{PGM} explicitly imposes
+structural relationships amongst variables and controls the ways in which they may interact.
+Considerable attention has been given to the problem of automated structure discovery.
+Algorithms for structure discovery typically start as a blank slate, attempting to induce structure
+from observations alone.
+\\\\
+On the other hand, when applying Machine Learning to solve real world problems there is
+often background knowledge available about the problem domain. The ability to exploit
+this knowledge to enable or improve potential solutions is of obvious virtue.
+When this domain knowledge can be expressed in the form of dependencies which are known to exist
+or not exist a priori, this knowledge can be easily incorporated into the \ac{PGM} formalism.
+When domain knowledge is more nebulous, and can not straightforwardly be expressed in the form
+of dependencies, incorporating this knowledge becomes more difficult. Examples of this sort of
+knowledge include repetition in music, symmetry in images, and locality in space.
+In the context of \acp{PGM}, the later has been addressed effectively through the use of
+grid-structured models, and similar techniques could likely be employed to capture notions
+of symmetry. Taking inspiration from these methods this work focuses on repetition
+in time series, using several tasks in the activity recognition domain as motivating examples.
 
-\section{The Case for Structure}
+\section{Contributions}
+The most important contribution of this work is the identification and empirical exploration of
+a subclass of \acp{HMM} especially well suited to capture repetitive structure in time series.
+The subclass of \ac{HMM} considered here is less computationally demanding than a standard \ac{HMM},
+and is shown to perform well on a variety of activity recognition tasks both within the supervised
+and unsupervised learning framework. Furthermore, interpreting the latent state sequence
+found by these models yields highly accurate repetition counts.
+\\\\
+To further demonstrate the effectiveness of this subclass of \ac{HMM}, it is utilized as
+the base distribution in a Bayesian nonparametric mixture model. To the author's knowledge,
+nonparametric mixtures of \acp{HMM} have not been previously discussed in the literature.
+To support inference in this model this work extends the collapsed block Gibbs sampler
+of \cite{pcfg-bayesian-johnson} to jointly sample in the space of cluster assignments and
+latent state sequences.
+
+
+% Uncovering the underlying structure giving rise to a set of observations is a
+% common theme in Machine Learning and considerable attention has been given to
+% the problem of structure discovery. Algorithms for structure discovery typically
+% operate within the \ac{PGM} formalism.
+% often
+%
+% start as a blank slate, attempting to induce structure, typically in the form of
+% conditional dependencies, from observations alone. When some dependencies are known
+% to exist or not exist a priori, this knowledge can be easily incorporated. However,
+% when background knowledge is more nebulous, and can not be cleanly expressed in the
+% form of conditional dependencies in some \ac{PGM}, the problem becomes more difficult.
+%
+% here is background knowledge
+% which could be brought to bare on the problem
+
+% \section{The Case for Structure}
+% When large amounts of labeled data are unavailable, and
+
+% Over the last several years there has been a surge of interest in the field of
+% Machine Learning. This is largely due to significant progress being made
+% on several practical problems such as object detection and speech recognition, particularly
+% within the Deep Learning framework~\cite{bengio-deep-learning}. Most of
+% these successes fall within the supervised Machine Learning setting.
+% In the supervised setting input data is paired with a desired output, and the goal of
+% learning is to induce a function mapping inputs to outputs that performs well on
+% previously unseen data, i.e., generalizes. The downside of the supervised Deep Learning
+% approach to these problem is the need for a large amount of annotated data
+% and significant computational overhead. Indeed, if both these prerequisites are met,
+% Deep Learning approaches frequently yield state of the art results.
+% \\\\
+% When large amounts of data are unavailable, or labels are noisy and/or incomplete,
+% the picture is much less clear.
+
+
 
 \section{Applications}
 
 \section{Organization}
 The remainder of this thesis is organized as follows:
 \begin{quote}
-    Chapter \ref{chap:Analyzing Human Activity with Sensors} reviews existing
-    applications of sensors based human activity analysis with a focus on the
-    activity recognition domain.
+    Chapter \ref{chap:Analyzing Human Activity with Sensors} formalizes
+    the Human Activity Recognition problem and reviews the existing literature,
+    with a focus on sensor based systems.
 \end{quote}
 
 \begin{quote}
-    Chapter \ref{chap:Activity Data} describes the dataset used
+    Chapter~\ref{chap:Activity Data} describes the dataset used
     for the real world experiments presented in this thesis.
     This includes both the methodologies used for data collection,
     and labeling schemes developed to support subsequent experiments.
 \end{quote}
 
 \begin{quote}
-    Chapter \ref{chap: Hidden Markov Models} provides relevant background
+    Chapter~\ref{chap: Hidden Markov Models} provides relevant background
     related to Hidden Markov Models and the more general Dynamic Bayesian Network
     framework. This chapter also introduces a novel Bayesian Nonparametric extension
     of Mixtures of Hidden Markov Models.
 \end{quote}
 
 \begin{quote}
-    Chapter \ref{chap: A Generative Model for Repetitive Sequences} introduces
-    a structured Hidden Markov Model variant which is particularly well suited
+    Chapter~\ref{chap: A Generative Model for Repetitive Sequences} introduces
+    a structured subclass of Hidden Markov Models which are particularly well suited
     to the types of problems explored in this thesis.
 \end{quote}
 
 \begin{quote}
-    Chapter \ref{chap:Synthetic experiments with Hidden Markov Model} presents
+    Chapter~\ref{chap:Synthetic experiments with Hidden Markov Model} presents
     synthetic experiments which are intended to explore the capabilities of the
-    novel techniques introduced in Chapter~\ref{chap: Hidden Markov Models} and
-    \ref{chap: A Generative Model for Repetitive Sequences}.
+    techniques introduced in Chapter~\ref{chap: Hidden Markov Models}
+    and~\ref{chap: A Generative Model for Repetitive Sequences}.
 \end{quote}
 
+\begin{quote}
+    In Chapter~\ref{chap:Segmented Exercise Classification} the proposed
+    model is shown to compare favorably to a strong performing system influenced
+    by the existing literature in a supervised exercise classification setting.
+\end{quote}
+
+\begin{quote}
+    Chapter~\ref{chap:Segmenting Exercises} demonstrates the use of the proposed
+    model for unsupervised time series segmentation.
+\end{quote}
+
+\begin{quote}
+    Chapter~\ref{chap:Infering Exercise Types and Variations} presents experiments
+    using Bayesian nonparametrics to cluster exercises and exercise variations.
+\end{quote}
+
+\begin{quote}
+    Chapter~\ref{chap:Conclusion} contains concluding remarks and future directions.
+\end{quote}
 
 \chapter{Analyzing Human Activity with Sensors}
 \label{chap:Analyzing Human Activity with Sensors}
@@ -247,7 +335,7 @@ The availability of small low cost microprocessors and sensors has
 enabled the creation of numerous wearable devices for research, industrial,
 and commercial applications. These applications target a diverse set of domains
 including fitness~\cite{long-term-devices},
-health status monitoring~\cite{elderly}~\cite{health-survey},
+health status monitoring~\cite{elderly,health-survey},
 and workplace safey~\cite{assembly-activity}.
 Despite the variety of applications a common underlying theme to most of these
 works is \ac{HAR}, the act of identifying what activity the wearer is engaged in at a given time.
@@ -260,14 +348,14 @@ as the type and granularity of the recognized activities, varies greatly from sy
 \section{Sensors}
 \label{sec:HAR-Sensors}
 \ac{HAR} systems have been designed to work with numerous input sources including
-video \cite{har-vision-survey},
-audio \cite{assembly-activity},
-RFID \cite{har-video-rfid},
-location, temperature, motion sensors \cite{har-survey},
+video~\cite{har-vision-survey},
+audio~\cite{assembly-activity},
+RFID~\cite{har-video-rfid},
+location, temperature, motion sensors~\cite{har-survey},
 or combinations thereof.
 Keeping in line with much of the \ac{HAR} literature,
 the focus of this work shall be on wearable sensor based systems,
-in particular systems utilizing accelerometers and gyroscopes \cite{multiple-sensor-bao}
+in particular systems utilizing accelerometers and gyroscopes~\cite{multiple-sensor-bao}
 as input. In addition to sensor type, systems vary both in body location
 and the number of locations used.
 \\\\
@@ -277,7 +365,7 @@ locations allow a more complete picture of the activity being performed,
 especially since the motion associated with an activity may be isolated to a
 single limb or portion of the body, e.g., writing or riding a bike. However, if such
 systems are to be actually utilized, requiring a user to attach multiple devices to
-different body locations is likely impractical and obtrusive \cite{har-survey}.
+different body locations is likely impractical and obtrusive~\cite{har-survey}.
 As an extreme example of location proliferation, \cite{many-sensor-locations} presents a
 system composed of twelve devices attached at distinct locations.
 
@@ -289,7 +377,7 @@ To frame the current work in the context of the broader \ac{HAR} literature syst
 be divided into two categories based on activity specificity.
 \\\\
 On one end of the spectrum are systems which recognize broad category daily activities
-such as walking, driving, making a phone call, or watching TV \cite{multiple-sensor-bao}.
+such as walking, driving, making a phone call, or watching TV~\cite{multiple-sensor-bao}.
 Activities in this group typically last for a few minutes to several hours,
 and can largely be characterized by general levels of motion rather than a precise
 series of movements. A useful feature of such broad categories is that a wearer's day
@@ -300,7 +388,7 @@ of being plagued by ambiguity, non-mutual exclusivity, and intra-category variab
 Running, and Folding Laundry. Given these categories: What is the correct classification of
 someone folding laundry while watching TV? At what speed does one stop walking and begin running?
 Is a jogger walking or running? The answers to such questions will largely depend on the target
-domain and fundamentally rule out certain post-hoc analysis \cite{ms-overview}.
+domain and fundamentally rule out certain post-hoc analysis~\cite{ms-overview}.
 \\\\
 On the other end of the spectrum are systems with narrow activity categories.
 A common example from the literature, and the one explored in this work,
@@ -316,11 +404,11 @@ with class imbalance \cite{class-imbalance}. Recognizing narrow category activit
 closely related to the of Gesture Recognition \cite{gesture-recognition}.
 \\\\
 Several works have focused on crossing the boundaries between broad and narrow
-categories using either an implicit or explicit hierarchical decomposition of activities
-\cite{hierarchical-thesis}, \cite{factored-hmm-tran}. In this framework, potentially shared,
- narrow activities are combined to form broad activities. To date, these systems do not use
- a number of broad activities that would be necessary to fully segment an entire day
- into activity categories.
+categories using either an implicit or explicit hierarchical decomposition of
+activities~\cite{hierarchical-thesis,factored-hmm-tran}.
+In this framework, potentially shared, narrow activities are combined to form broad activities.
+To date, these systems do not use a number of broad activities that would be necessary to fully
+segment an entire day into activity categories.
 
 \section{Problem Formalization}
 The \ac{HAR} task will be formally defined as follows: Let $\seq{x}{1}{T}$ be
@@ -358,25 +446,33 @@ desrcibed above.
 \end{algorithm}
 
 \section{Windows and Features}
-The \ac{HAR} problem if commonly decomposed into a series of
-fixed size independent decisions problems
-\cite{assembly-activity}
-\cite{tutorial-bulling}
-\cite{phone-kwapisz},
-which will be referred to as \emph{windowing}.
+\label{sec:HAR Windows and Features}
+The \ac{HAR} problem if commonly decomposed into a series of independent decisions
+problems~\cite{assembly-activity,tutorial-bulling,ms-activity,phone-kwapisz}.
+When this approach is used the resulting classifier operates over fixed size temporal
+windows of the data, which will be referred to as \emph{windowing}.
 The typical windowing setup proceeds as follows:
 \begin{itemize}
     \item Split the sequence into a series of fixed size possibly overlapping windows
           of size $n$, $w_1, w_2, \ldots, w_m$, $w_i = \seq{x}{t}{t + n}$.
-    \item Map each window $w_i$ to a corresponding feature vector $\phi(w_i)$.
+    \item Map each window $w_i$ to a corresponding feature vector $\Phi(w_i)$.
     \item For each $i$ use any classification algorithm to predict the activity occurring
-          within the window, $\hat{y}_i = f(\phi(w_i))$.
+          within the window, $\hat{y}_i = h(\Phi(w_i))$.
 \end{itemize}
-A variety of features, $\phi(w_i)$, have been proposed in the literature.
-The most common are described below. For ease of exposition the input will be assumed
-to be a one dimensional real valued time series and the features computed over the
-first window spanning from time $1$ to $n$. Generalization to multiple dimensions and
-other window size and positions is straightforward.
+Assuming $d$ real valued inputs are observed at each time step, the feature function $\Phi$
+can be described as
+\begin{align*}
+    \Phi \colon \mathbb{R}^{n \times d} & \longrightarrow \mathbb{R}^{k}\\
+    \seq{x}{t}{t + n} & \longmapsto (\phi_1(\seq{x}{t}{t + n}), \ldots, \phi_k(\seq{x}{t}{t + n})),
+\end{align*}
+where $n$ is the size of the window, $\phi_i$ are the component feature functions,
+and $k$ is the the number of features computed for each window.
+\\\\
+A variety of feature function $\phi_i$ have been proposed in the literature,
+several of which are described below. For ease of exposition the input
+will be assumed to be a one dimensional real valued time series and the features computed
+over the first window spanning from time $1$ to $n$. Generalization to multiple dimensions
+and other window sizes and positions are straightforward.
 \begin{align*}
     \intertext{\textbf{Mean and Variance:}} \\
     \mu &= \frac{1}{n}\sum_{t=1}^n x_t \\
@@ -404,34 +500,60 @@ Despite the advantages of windowing, neglecting the sequential nature of the pro
 is the largest drawback of the approach. As only a small window is available
 to the classifier, context outside this window is unavailable, rendering
 the predicted activity of each window independent. Furthermore, because the
-window size $\omega$ must fixed a priori, an activity which requires more than this time
+window size must fixed a priori, an activity which requires more than this time
 to be identified will potentially fail to be recognized as accurately.
 
-
-\section{Existing Approaches}
+\section{Related Work}
+\label{sec:HAR Related Work}
+\subsection{Supervised Approaches}
 Most approaches to \ac{HAR} in the literature fall within the
-supervised Machine Learning framework \cite{har-survey}, i.e.,
+supervised Machine Learning framework~\cite{har-survey}, i.e.,
 sensor sequences are paired with label sequences denoting the activity
-being done at each point in time. Within The supervised framework a variety
-of classification techniques have been applied.
+being done at each point in time.
 \\\\
-The approach in \cite{ms-activity} is to first derive a series of
-standard features from the raw sensor data. A \ac{SVM} is then applied to overlapping
-fixed size windows consisting of several seconds of sensors. Significantly better results were
-obtained on the data considered here using a Random Forest rather than a \ac{SVM},
-and only the former is reported here. This discrepancy is likely due to \cite{ms-activity}
-utilizing a number of heuristic feature partitioning schemes which were not able to be replicated in this work.
-\textbf{TODO:} This Section obviously needs work. Have references
-(\cite{ms-overview},
-\cite{arm-worn-muehlbauer},
-\cite{phone-kwapisz},
-\cite{weka-aaai-ravi},
-\cite{multiple-sensor-bao},
-\cite{taylor-crbm-2006}) need to write.
+The closest work in terms of domain and scope to that presented here is~\cite{ms-activity}.
+Like this work, they work within the exercise classification domain utilizing data
+from 96 participants for 26 exercises collected from a single device attached to the
+participant's arm. Although they collected data for 26 activities,
+results are only presented for discrimination amongst 13 different
+exercises (this work presents experiments using 50 exercises). Their focus is on the development
+and validation of an end-to-end realtime classification system, while this work focuses primarily on
+several tasks related to the development of such a system. Their full system is based on a three
+stage pipeline consisting of: segmentation, classification, and repetition counting. The segmentation
+and classification systems are essentially the same, differing only slightly in features used and the
+former being a binary classifier and the later being a mult-class classifier. The classifier used
+in both cases is a \ac{SVM} operating over 5 second windows. Their repetition counting procedure
+is based on a heuristic peak counting algorithm.
+\\\\
+Another closely related work is~\cite{hierarchical-thesis}, although they focus
+primarily on active learning. Their work presents a discriminative \ac{PGM} for the \ac{HAR}
+task based on a decomposition of activities into a sequence of attributes, a.k.a gestures.
+The attributes and their relation to the activity are hand engineered from domain expertise
+and ultimately serve the same role as features. At test time the attributes are predicted by a
+lower level classifier operating over fixed sized input windows. They apply their model to both
+daily activities and exercises, although not simultaneously.
 
-Like this work, \cite{ms-activity} apply Machine Learning methods to segment, classify, and count repetitions
-of exercises using an arm mounted accelerometer and gyroscope (their sensors were mounted on the forearm
-near the elbow rather than the wrist).
+\subsection{Unsupervised Approaches}
+Unlike the supervised setting, ground truth labels are not provided to the learning
+algorithm in the unsupervised setting. Lacking labels, the goal of unsupervised \ac{HAR}
+reduces to clustering, and possibly segmenting, sequences. This task has received considerably
+less attention from the \ac{HAR} community, although some prior work does exist.
+\\\\
+\cite{har-topic-models} use \ac{LDA}~\cite{lda-blei}, an admixture model originally
+developed for modeling document topics, to infer daily activities such as working or
+commuting. However, rather than directly inferring activities from raw data, they use the
+outputs of traditional \ac{HAR} classifiers trained in a supervised manner on lower level
+activities (walking, sitting, etc) as inputs to their unsupervised system.
+\\\\
+In~\cite{hmm-motifs} a combination of algorithms for motif discovery~\cite{motif-algo} and \acp{PGM}
+are used to segment and cluster raw activity data. Their proposed approach consists of
+iteratively building up a set a set of motifs from the raw data, refining the motifs,
+and then training an \ac{HMM} for each motif. The \acp{HMM} are then used to segment and classify
+sequences containing 6 unique dumbbell exercises. Although their reported results are promising,
+details regarding the number of participants, and whether their system was evaluated on
+out-of-sample participants were omitted. Their proposed system also requires the user manually
+specify a large number of hyperparameters such as window size, number of motifs, number of \ac{HMM} states,
+and several parameters for the motif refinement algorithm.
 
 \chapter{Activity Data}
 \label{chap:Activity Data}
@@ -518,12 +640,12 @@ and
 
 \chapter{Hidden Markov Models}
 \label{chap: Hidden Markov Models}
-\acp{HMM} \cite{rabiner-hmms} are a common theme throughout this thesis.
+\acp{HMM}~\cite{rabiner-hmms} are a common theme throughout this thesis.
 In the spirit of self containment this chapter introduces common terminology,
 methods and inference algorithms employed when working with \acp{HMM}. In particular
-the focus is on Bayesian methods. For a more standard introduction see Kevin Murphy's excellent thesis
-\cite{murphy-thesis}, which also discusses the more general class of probabilistic models
-known as \acp{DBN}, of which \acp{HMM} and the popular Kalman filter \cite{kalman-filter}, are a member.
+the focus is on Bayesian methods. For a more standard introduction see Kevin Murphy's
+excellent thesis~\cite{murphy-thesis}, which also discusses the more general class of probabilistic models
+known as \acp{DBN}, of which \acp{HMM} and the popular Kalman filter~\cite{kalman-filter}, are a member.
 
 \section{Introduction to Hidden Markov Models}
 \label{sec:Introduction to Hidden Markov Models}
@@ -546,7 +668,7 @@ independent of all other variables given the latent variable at time $t$,
     P(x_t \mid \seq{y}{1}{T}) = P(x_t \mid y_t).
 \]
 
-Again, this assumption can be relaxed in obvious ways \cite{autoregressive-shannon}.
+Again, this assumption can be relaxed in obvious ways~\cite{autoregressive-shannon}.
 For ease of exposition the simplest formulation presented above is used here.
 \\\\
 Given the above assumptions the joint probability of a sequence of observations
@@ -724,7 +846,7 @@ Then
 
 The Dirichlet distribution is referred to as the \emph{conjugate} prior for the
 Categorical distribution since the posterior $P(\pi \mid D, \alpha)$ and prior $P(\pi \mid \alpha)$
-have the same form \cite{gelman-bayesian-data-analysis}. The marginal likelihood $P(D \mid \alpha)$
+have the same form~\cite{gelman-bayesian-data-analysis}. The marginal likelihood $P(D \mid \alpha)$
 can be obtained by integrating over $\pi$ as follows.
 
 \begin{align}
@@ -738,9 +860,9 @@ can be obtained by integrating over $\pi$ as follows.
        \int_{\triangle} \prod_k \pi_k^{n_k + \alpha_k - 1} d \pi. \label{eq:unnormed-dir}
 \end{align}
 
-The term inside the integral in (\ref{eq:unnormed-dir}) is the unnormalized probability density function
+The term inside the integral in (\ref{eq:unnormed-dir}) is the unnormalized \ac{pdf}
 of a Dirichlet distribution with parameters $n_k + \alpha_k$. Since (\ref{eq:dir-pdf})
-is a pdf it follows that
+is a \ac{pdf} it follows that
 
 \begin{align}
     1
@@ -840,8 +962,8 @@ This Section develops a collapsed Gibbs Sampler for $P(\mathcal{Y} \mid \mathcal
 We do so using a block-wise approach, resampling an entire state sequence $\seq{y}{1}{T}^i$ given
 $\mathcal{X}$, $\mathcal{Y}_{-i}, \alpha$, where $\mathcal{Y}_{-i}$ denotes
 $\mathcal{Y} \setminus \{\seq{y}{1}{T}^i\}$. This sampler follows the approach
-described in \cite{pcfg-bayesian-johnson} for \acp{PCFG}, and utilized
-for \acp{HMM} in \cite{hmm-comparison-johnson}.
+described in~\cite{pcfg-bayesian-johnson} for \acp{PCFG}, and utilized
+for \acp{HMM} in~\cite{hmm-comparison-johnson}.
 \\\\
 \begin{figure}[ht!]
     \centering
@@ -895,7 +1017,7 @@ Let us proceed in the usual manner for constructing such a Gibbs sampler. We hav
 \end{equation}
 
 The $P(\seq{x}{1}{T}^i \mid \mathcal{Y}_{-i}, \mathcal{X}_{-i}, \alpha)$ term in the denominator
-of (\ref{eq:hmm-gibbs-problem}) is particularly problematic, as noted by \cite{pcfg-bayesian-johnson}.
+of (\ref{eq:hmm-gibbs-problem}) is particularly problematic, as noted in~\cite{pcfg-bayesian-johnson}.
 The need to marginalize over all possible state sequences (without reference to a set of \ac{HMM} parameters)
 is particularly difficult, and it is not clear how one would approach such a problem
 in a computationally efficient manner.
@@ -904,7 +1026,7 @@ Instead, since the denominator of (\ref{eq:hmm-gibbs-problem}) does not depend o
 we can appeal to a Metropolis-Hastings approach, knowing this troublesome term will cancel when
 computing the acceptance probability.
 \\\\
-A Metropolis-Hastings sampler \cite{mcmc-ml} is a popular \ac{MCMC} algorithm for drawing samples
+A Metropolis-Hastings sampler~\cite{mcmc-ml} is a popular \ac{MCMC} algorithm for drawing samples
 from a target distribution $P(X)$, provided one is able to compute a value
 $f(x)$ such that $f(x) \propto P(x)$. The sampler works by repeatedly drawing a
 sample $x^*$ from a proposal distribution $q(\cdot \mid x)$ which is probabilistically
@@ -932,7 +1054,7 @@ be \emph{independent}. The generic Metropolis-Hastings algorithm is given in Alg
 
 For the problem of sampling a state sequence $\seq{y}{1}{T}$, the Metropolis-Hastings algorithm
 is utilized as a subroutine to sample from the conditional distribution required
-by the Gibbs sampler. This is known as Metropolis-within-Gibbs \cite{mh-within-gibbs}.
+by the Gibbs sampler. This is known as Metropolis-within-Gibbs~\cite{mh-within-gibbs}.
 Let $\mathcal{Y}^* = \{\seq{y}{1}{T}\}^* \cup \mathcal{Y}_{-i}$,
 where $\seq{y}{1}{T}^*$ is drawn from some an independent distribution $q(\cdot)$.
 Then the proposed $\seq{y}{1}{T}^*$ is accepted with probability
@@ -964,12 +1086,12 @@ $\hat{\Theta} = \E[\Theta \mid Y_{-i}, X_{-i}, \alpha]$, and then the proposal i
 \[
     \seq{y}{1}{T}^* \sim P(\cdot \mid \seq{x}{1}{T}^i, \hat{\Theta})
 \]
-utilizing the algorithm outlined in \cite{scott-bayesian-hmm}.
+utilizing the algorithm outlined in~\cite{scott-bayesian-hmm}.
 \\\\
 \textbf{TODO:} Explain Scott's algorithm.
 \\\\
 Empirically this results in a majority of proposals $\seq{y}{1}{T}^*$ being accepted, which aligns
-with the observations reported by \cite{hmm-comparison-johnson}.
+with the observations reported by~\cite{hmm-comparison-johnson}.
 
 \section{Mixtures of Hidden Markov Models}
 \label{sec:Mixtures of Hidden Markov Models}
@@ -1009,15 +1131,15 @@ where $c_k = \sum_{z \in \mathcal{Z}}\1\{z = k\}$ and $\bm{c} = (c_1, \ldots, c_
 In many situations $K$ is unknown. Estimation of $K$ can be carried out using standard
 techniques such as cross validation or Bayesian Information Criterion, but this is
 often computationally difficult and methodologically unsatisfying. A modern
-approach to dealing with this problem is Bayesian nonparametrics \cite{jordan-bayesian-nonparam}.
+approach to dealing with this problem is Bayesian nonparametrics~\cite{jordan-bayesian-nonparam}.
 In brief, Bayesian nonparametric techniques allow one to sidestep the problems associated with finite
 capacity models, by assuming observations are generated from infinite dimensional objects,
 for which only a finite number are involved in the generation of a finite set of samples.
 \\\\
-In the case of mixture models, the above model naturally be extended to handle a
-countably infinite number of cluster components using a Dirichlet Process \cite{teh-dirichlet}.
+In the case of mixture models, the above model can naturally be extended to handle a
+countably infinite number of cluster components using a Dirichlet Process~\cite{teh-dirichlet}.
 The constructive definition of the Dirichlet process is given in terms of a
-\emph{stick-breaking process} \cite{sethuraman-constructive} with parameter
+\emph{stick-breaking process}~\cite{sethuraman-constructive} with parameter
 $\beta \in \mathbb{R}_{>0}$, frequently denoted $\GEM(\beta)$.
 
 \begin{align*}
@@ -1042,7 +1164,7 @@ from a $\GEM(\beta)$ distribution.
 Note that for any finite set of $\{z_1, \ldots, z_m\} = \mathcal{Z}$,
 $\bm{c}$ contains at most $m$ unique elements. In analogy to the finite
 mixture model, denote the number of unique elements $K$. Then the marginal likelihood
-of $\bm{c}$ given $\beta$ has the following form \cite{kyung-estimation-dirichlet}
+of $\bm{c}$ given $\beta$ has the following form~\cite{kyung-estimation-dirichlet}
 
 \begin{equation}\label{dp-marg}
     P(\bm{c} \mid \beta) = \frac{m^K \Gamma(\beta)}{\Gamma(\beta + m)} \prod_k \Gamma(c_k).
@@ -1071,7 +1193,7 @@ in Section~\ref{sec:A Block Collapsed Gibbs Sampler for Hidden Markov Models}
 could be applied to carry out inference in the infinite mixture of \acp{HMM}.
 \\\\
 However, collapsed Gibbs sampling for Dirichlet processes is a well studied problem for
-which numerous solutions exist \cite{neal-mcmc-dp}. In particular it would be easy
+which numerous solutions exist~\cite{neal-mcmc-dp}. In particular it would be easy
 to alternate between sampling $z_i$ variables and latent state sequences $\seq{y}{1}{T}^i$.
 Unfortunately this will mix poorly, since the cluster allocation is highly coupled with
 the sequence of latent states. The ability to propose a new cluster and a new state sequence
@@ -1079,7 +1201,7 @@ simultaneously avoids stagnation of the Markov chain, motivating the desire to b
 in the combined space $(z_i, x^i_1, x^i_2, \ldots, x^i_T)$.
 \\\\
 Luckily the marginal posterior predictive distribution of a Dirichlet process has a particularly
-convenient form \cite{infinite-gmm} given by
+convenient form~\cite{infinite-gmm} given by
 \[
     P(z_i=k|\mathcal{Z}_{-i}) \propto
     \begin{cases}
@@ -1095,9 +1217,9 @@ can be neglected when calculating the acceptance ratio of the Metropolis within 
 \chapter{A Generative Model for Repetitive Sequences}
 \label{chap: A Generative Model for Repetitive Sequences}
 A significant advantage of \acp{PGM} over popular discriminative Machine Learning methods
-such as \acp{SVM}, Random Forests, and Neural Networks, is the ability to easily incorporate
-structured knowledge via latent variables and conditional dependencies into the models
-\cite{structured-priors}, \cite{poverty-stimulus}, \cite{how-to-grow-a-mind}.
+such as \acp{SVM}, Random Forests, or Neural Networks, is the ability to easily incorporate
+structured knowledge via latent variables and conditional dependencies into the
+models~\cite{structured-priors,poverty-stimulus,how-to-grow-a-mind}.
 This is true even in the case when the structure itself is unobserved, and must
 be learned in an unsupervised manner. This chapter describes a structured generative model for
 repetitive sequences. The model is a \ac{HMM} with cyclically structured transitions which,
@@ -1105,8 +1227,8 @@ for brevity, will be dubbed the \ac{CHMM}.
 \\\\
 This model is specifically designed to reflect the structure of the repetitive sequences
 often encountered in activity recognition. While there have been several previous studies demonstrating
-the effectiveness of \acp{HMM} for recognizing activities from wearable sensors, \cite{hhmm-lee},
-\cite{factored-hmm-tran}, to date none have explicitly designed models to account for the repetitive nature
+the effectiveness of \acp{HMM} for recognizing activities from wearable sensors~\cite{hhmm-lee,factored-hmm-tran},
+to date none have explicitly designed models to account for the repetitive nature
 of many activities. Repetition is a powerful inductive bias that can easily be incorporated into
 \ac{DBN} models (such as \acp{HMM}). This is especially relevant in the exercise recognition
 domain as all activities considered are repetitive.
@@ -1350,7 +1472,7 @@ $\seq{x}{t_1+1}{t_2}$, and the constant portions, $\seq{x}{1}{t_1}$, $\seq{x}{t_
 More formally, each timestep $x_t$ in the sequence is annotated with a tag $a_t \in \{I, O\}$
 denoting whether the sequence is \emph{in} ($I$), or \emph{out} ($O$) of the repetitive portion
 of the sequence at time $t$. The annotation is similar to the BIO (begin/in/out) representation
-commonly used in \ac{NLP} chunking applications \cite{ramshaw-bio}.
+commonly used in \ac{NLP} chunking applications~\cite{ramshaw-bio}.
 \\\\
 Rather than using these annotations within the learning procedure (for example, to learn a
 discriminative classifier) an unsupervised approach is taken, in which only the raw sequence
@@ -1464,7 +1586,7 @@ total training sequences.
 Two clustering approaches are considered. The first utilizes standard \acp{HMM}
 as the base distribution and the second uses \acp{CHMM} as the base distribution.
 The experiment is repeated 10 times and the resulting clusterings are compared using
-\ac{AMI} \cite{ami}, a version of Mutual Information corrected to adjust for chance agreements.
+\ac{AMI}~\cite{ami}, a version of Mutual Information corrected to adjust for chance agreements.
 Figure~\ref{fig:artificial-cluster-metrics} shows that as well as increased performance,
 in terms of \ac{AMI}, the Dirichlet Process with \ac{CHMM} base distributions finds
 the correct number of clusters in 80\% of experiments. This is in contrast to the standard
@@ -1526,8 +1648,8 @@ analogous split of the training data. Table~\ref{table:segment-dataset} summariz
 \end{table}
 
 \section{Models}
-The proposed \ac{CHMM} was compared to a Structured Perceptron \cite{perceptron-collins}
-and a strong performing system heavily influenced from the activity recognition literature \cite{ms-activity}.
+The proposed \ac{CHMM} was compared to a Structured Perceptron~\cite{perceptron-collins}
+and a strong performing system heavily influenced from the activity recognition literature~\cite{ms-activity}.
 As only sequences with a single label are considered in this experiment, a voting procedure is used
 to aggregate predictions for individual time steps to produce the final classification for both
 the Random Forest and Structured Perceptron. Note that this gives an unfair advantage to these
@@ -1535,14 +1657,12 @@ models. In a real world activity classification setting one would not a priori h
 the bounds (segmentation) over which to aggregate votes.
 
 \subsection{Baseline from Literature}
-Decomposition of a temporal classification problem into a series
-of fixed size \ac{iid} decisions is a common approach to activity recognition
-in the literature. The approach in \cite{ms-activity} is to first derive a series of
-standard features from the raw sensor data. A \ac{SVM} is then applied to overlapping
-fixed size windows consisting of several seconds of sensors. Significantly better results were
+A classifier inspired by~\cite{ms-activity} (discussed in Section~\ref{sec:HAR Related Work})
+was developed to provide a strong performing baseline. Significantly better results were
 obtained on the data considered here using a Random Forest rather than a \ac{SVM},
-and only the former is reported here. This discrepancy is likely due to \cite{ms-activity}
-utilizing a number of heuristic feature partitioning schemes which were not able to be replicated in this work.
+and only the performance of the former is reported.
+This discrepancy is likely due to \cite{ms-activity} utilizing a number of heuristic feature
+partitioning schemes which were not able to be replicated in this work.
 \\\\
 The following features were computed over 4 second windows (60 timesteps)
 for each of the 3 accelerometer and 3 gyroscope axis:
@@ -1747,8 +1867,8 @@ produced by the \ac{CHMM} and those produced by the exercise observer.
 
 Did you see that stuff in Figure~\ref{fig:actseg}, especially Figure~\ref{fig:actseg:burpee}.
 
-\chapter{Infering Exercise Types and Exercise Variations}
-\label{sec:Infering Exercise Types and Exercise Variations}
+\chapter{Infering Exercise Types and Variations}
+\label{chap:Infering Exercise Types and Variations}
 The experiments presented in Chapter~\ref{chap:Segmented Exercise Classification}
 and Chapter~\ref{chap:Segmenting Exercises} assume labels for the type of exercises
 being performed, as well as the number of unique types, are given during the parameter
@@ -1762,7 +1882,30 @@ unique types is also unknown the Bayesian nonparametric approach described in
 Section~\ref{sec:Mixtures of Hidden Markov Models}, and utilized to cluster
 artificial data in Section~\ref{sec:Clustering Sequences}, is used.
 
-\section{Infering Variations}
+\section{Clustering Exercise Types}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/clustering.types/cluster-ami.pdf}
+    \caption{Burpees.}
+    \label{fig:cluster-type-ami}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/clustering.types/cluster-correlation.pdf}
+    \caption{Burpees.}
+    \label{fig:cluster-confustion}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/clustering.types/cluster-confusion.pdf}
+    \caption{Burpees.}
+    \label{fig:cluster-confustion}
+\end{figure}
+
+
+\section{Clustering Exercise Variations}
 \label{sec:Infering Variations}
 The exercise labeling scheme discussed in Section~\ref{sec:Exercise Taxonomy}
 has a natural hierarchical structured. For the purpose of this Section, the base type
@@ -1776,10 +1919,12 @@ Automatically clustering exercises into subtypes has a variety of practical appl
 From a data collection perspective, having a estimate of the number of actual subtypes present
 in a dataset can inform the collector whether the number of identified subtypes is sufficiently broad
 to cover the number of actual number of variations, or alternatively overly specific.
-If the end goal is classification, splitting classes into subclasses can reduce potentially
-increase classifier accuracy, especially when members of the same class distinct in the input
-feature space\footnote{For }.
+If the end goal is classification, splitting classes into subclasses can potentially
+increase classifier accuracy due to a reduction in intra-class variability.
 
+
+\chapter{Conclusion}
+\label{chap:Conclusion}
 
 
 \chapter{Simultaneous Segmentation and Classification of Exercises}
