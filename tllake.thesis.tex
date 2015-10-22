@@ -1084,30 +1084,47 @@ $\mathcal{Y}_{-i}$, $\mathcal{X}_{-i}$. In particular $\hat{\Theta}$ is set to i
 $\hat{\Theta} = \E[\Theta \mid Y_{-i}, X_{-i}, \alpha]$, and then the proposal is sampled from
 
 \[
-    \seq{y}{1}{T}^* \sim P(\cdot \mid \seq{x}{1}{T}^i, \hat{\Theta})
+    \seq{y}{1}{T}^* \sim P(\cdot \mid \seq{x}{1}{T}^i, \hat{\Theta}).
 \]
-utilizing the algorithm outlined in~\cite{scott-bayesian-hmm}.
+Empirically this strategy results in a majority of proposals $\seq{y}{1}{T}^*$ being accepted,
+which aligns with the observations reported by~\cite{hmm-comparison-johnson}.
+\\\\
+To sample a latent state sequence the algorithm described in~\cite{scott-bayesian-hmm} is used.
+The algorithm takes as input an observation sequence $\seq{x}{1}{T}$ and iteratively computes
+$p_i^t = P(Y_t=i \mid \seq{x}{1}{t})$ from $P(y_{t-1} \mid \seq{x}{1}{t-1})$ in
+a manner similar to the forward algorithm described in Section~\ref{sec:Introduction to Hidden Markov Models}.
+However, along the way a series of matrices $A^t$ are computed such that
+$a_{ij}^t = P(Y_{t-1}=i, Y_{t}=j, x_t \mid \seq{x}{1}{t-1})$. Once $p_i^T$
+is computed the latent state sequence is sampled in reverse order starting by
+sampling $y_T \sim \Cat(p^T)$. Having obtained a value for $y_t$, the algorithm
+then samples $y_{t-1} \sim \Cat(b)$, where $b$ is proportional to the $y_t$ column
+of $A^t$. A complete description is given in Algorithm~\ref{alg:sample-states}.
+
 \begin{algorithm}[H]
-    \caption{Sample States.\label{alg:har-list}}
+    \caption{Sample States.\label{alg:sample-states}}
     \begin{algorithmic}[1]
-        \Require{$\seq{x}{1}{T}$.}
-        \State $u_i^1 \gets P(y_i)P(x_1 \mid y_i)$
-        \State $p_i^1 \gets u_i^1 (\sum_j u_j^1)^{-1}$
+        \Require{Observation sequence $\seq{x}{1}{T}$.}
+        \Ensure{A sequence of laent state $\seq{y}{1}{T}$.}
+        \State
+        \State \(\triangleright\) Forward Traversal
+        \State $u_j^1 \gets P(y_i)P(x_1 \mid y_i)$
+        \State $p_j^1 \gets \dfrac{u_j^1}{\sum_i u_i^1}$
         \For{$t \gets 2, \ldots, T$}
             \State $u_{ij}^t \gets p_i^{t-1}P(j \mid i)P(x_t \mid j)$
-            \State $a_{ij}^t \gets u_{ij}^t (\sum_{i^\p j^\p} u_{i^\p j^\p}^t)^{-1}$
+            \State $a_{ij}^t \gets \dfrac{u_{ij}^t}{\sum_{i^\p j^\p} u_{i^\p j^\p}^t}$
             \State $p_j^t \gets \sum_i a_{ij}^t$
         \EndFor
-        \State $s^T \sim \Cat(p^T)$
+        \State
+        \State \(\triangleright\) Backward Sampling
+        \State $y_T \sim \Cat(p^T)$
         \For{$t \gets T, \ldots, 2$}
-            \State $s^{t-1} \sim \Cat(\sum_i a_{i s^t})$
+            \State $b_i \gets \dfrac{a_{i y_t}^t}{\sum_{i^\p}a_{i^\p y_t}^t}$
+            \State $y_{t-1} \sim \Cat(b)$
         \EndFor
+        \State \Return $\seq{y}{1}{T}$
     \end{algorithmic}
 \end{algorithm}
-\textbf{TODO:} Explain Scott's algorithm.
-\\\\
-Empirically this results in a majority of proposals $\seq{y}{1}{T}^*$ being accepted, which aligns
-with the observations reported by~\cite{hmm-comparison-johnson}.
+
 
 \section{Mixtures of Hidden Markov Models}
 \label{sec:Mixtures of Hidden Markov Models}
