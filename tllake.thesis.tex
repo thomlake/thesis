@@ -13,6 +13,7 @@
 \usepackage{natbib}
 \usepackage{enumitem}
 \usepackage{float}
+\usepackage{multirow}
 % \usepackage{subfig}
 \usepackage{subcaption}
 \usepackage[normalem]{ulem}
@@ -140,27 +141,30 @@ I want to thank my advisor Elise deDoncker and Robert Trenary for all their supp
 % \phantomsection
 \addcontentsline{toc}{chapter}{Acronyms}
 \chapter*{Acronyms}
-\begin{acronym}[XXXXXX]
-    \acro{DBN}{Dynamic Bayesian Network}
-    \acro{HMM}{Hidden Markov model}
-    \acro{CHMM}{Cyclic Hidden Markov Model}
-    \acro{HHMM}{Hierarchical Hidden Markov Model}
-    \acro{MoHMM}{Mixture of Hidden Markov Models}
-    \acro{DFA}{Deterministic Finite State Automaton}
-    \acro{PGM}{Probabilistic Graphical Model}
-    \acro{CRF}{Conditional Random Field}
-    \acro{MEMM}{Maximum Entropy Markov Model}
-    \acro{SVM}{Support Vector Machine}
-    \acro{MAP}{Maximum a Posteriori}
-    \acro{EM}{Expectation Maximization}
-    \acro{PCFG}{Probabilistic Context Free Grammar}
-    \acro{MCMC}{Markov Chain Monte Carlo}
-    \acro{NLP}{Natural Language Processing}
+\begin{acronym}[XXXXXXXXX]
     \acro{AMI}{Adjusted Mutual Information}
+    \acro{CHMM}{Cyclic Hidden Markov Model}
+    \acro{CRF}{Conditional Random Field}
+    \acro{DBN}{Dynamic Bayesian Network}
+    \acro{DFA}{Deterministic Finite State Automaton}
+    \acro{DPMoCHMM}{Dirichlet Process Mixture of Cyclic Hidden Markov Models}
+    \acro{DPMoHMM}{Dirichlet Process Mixture of Hidden Markov Models}
+    \acro{EM}{Expectation Maximization}
+    \acro{HAR}{Human Activity Recognition}
+    \acro{HHMM}{Hierarchical Hidden Markov Model}
+    \acro{HMM}{Hidden Markov model}
     \acro{iid}{independent and identically distributed}
     \acro{LDA}{Latent Dirichlet Allocation}
-    \acro{HAR}{Human Activity Recognition}
+    \acro{MAP}{Maximum a Posteriori}
+    \acro{MCMC}{Markov Chain Monte Carlo}
+    \acro{MEMM}{Maximum Entropy Markov Model}
+    \acro{MoCHMM}{Mixture of Cyclic Hidden Markov Models}
+    \acro{MoHMM}{Mixture of Hidden Markov Models}
+    \acro{NLP}{Natural Language Processing}
+    \acro{PCFG}{Probabilistic Context Free Grammar}
     \acro{pdf}{probability density function}
+    \acro{PGM}{Probabilistic Graphical Model}
+    \acro{SVM}{Support Vector Machine}
 \end{acronym}
 
 \cleardoublepage
@@ -270,10 +274,6 @@ latent state sequences.
 % When large amounts of data are unavailable, or labels are noisy and/or incomplete,
 % the picture is much less clear.
 
-
-
-\section{Applications}
-
 \section{Organization}
 The remainder of this thesis is organized as follows:
 \begin{quote}
@@ -321,8 +321,8 @@ The remainder of this thesis is organized as follows:
 \end{quote}
 
 \begin{quote}
-    Chapter~\ref{chap:Infering Exercise Types and Variations} presents experiments
-    using Bayesian nonparametrics to cluster exercises and exercise variations.
+    Chapter~\ref{chap:Clustering Exercise Types} presents experiments
+    using Bayesian nonparametrics to cluster exercises.
 \end{quote}
 
 \begin{quote}
@@ -337,7 +337,7 @@ and commercial applications. These applications target a diverse set of domains
 including fitness~\cite{long-term-devices},
 health status monitoring~\cite{elderly,health-survey},
 and workplace safety~\cite{assembly-activity}.
-Despite the variety of applications a common underlying theme to most of these
+Despite the variety of applications, a common underlying theme to most of these
 works is \ac{HAR}, the act of identifying what activity the wearer is engaged in at a given time.
 Upon further consideration this is to be expected; the ability of a system to provide
 meaningful output is dependent on the ability to \emph{understand} the current context.
@@ -401,7 +401,7 @@ the definition of an unreasonably large number of categories, or the introductio
 \emph{none of these} type category. The former is problematic both from a computational
 and dearth of data perspective, while the later will be plagued by problems associated
 with class imbalance \cite{class-imbalance}. Recognizing narrow category activity is
-closely related to the of Gesture Recognition \cite{gesture-recognition}.
+closely related to problem of Gesture Recognition \cite{gesture-recognition}.
 \\\\
 Several works have focused on crossing the boundaries between broad and narrow
 categories using either an implicit or explicit hierarchical decomposition of
@@ -1087,7 +1087,23 @@ $\hat{\Theta} = \E[\Theta \mid Y_{-i}, X_{-i}, \alpha]$, and then the proposal i
     \seq{y}{1}{T}^* \sim P(\cdot \mid \seq{x}{1}{T}^i, \hat{\Theta})
 \]
 utilizing the algorithm outlined in~\cite{scott-bayesian-hmm}.
-\\\\
+\begin{algorithm}[H]
+    \caption{Sample States.\label{alg:har-list}}
+    \begin{algorithmic}[1]
+        \Require{$\seq{x}{1}{T}$.}
+        \State $u_i^1 \gets P(y_i)P(x_1 \mid y_i)$
+        \State $p_i^1 \gets u_i^1 (\sum_j u_j^1)^{-1}$
+        \For{$t \gets 2, \ldots, T$}
+            \State $u_{ij}^t \gets p_i^{t-1}P(j \mid i)P(x_t \mid j)$
+            \State $a_{ij}^t \gets u_{ij}^t (\sum_{i^\p j^\p} u_{i^\p j^\p}^t)^{-1}$
+            \State $p_j^t \gets \sum_i a_{ij}^t$
+        \EndFor
+        \State $s^T \sim \Cat(p^T)$
+        \For{$t \gets T, \ldots, 2$}
+            \State $s^{t-1} \sim \Cat(\sum_i a_{i s^t})$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
 \textbf{TODO:} Explain Scott's algorithm.
 \\\\
 Empirically this results in a majority of proposals $\seq{y}{1}{T}^*$ being accepted, which aligns
@@ -1195,10 +1211,10 @@ could be applied to carry out inference in the infinite mixture of \acp{HMM}.
 However, collapsed Gibbs sampling for Dirichlet processes is a well studied problem for
 which numerous solutions exist~\cite{neal-mcmc-dp}. In particular it would be easy
 to alternate between sampling $z_i$ variables and latent state sequences $\seq{y}{1}{T}^i$.
-Unfortunately this will mix poorly, since the cluster allocation is highly coupled with
-the sequence of latent states. The ability to propose a new cluster and a new state sequence
-simultaneously avoids stagnation of the Markov chain, motivating the desire to blockwise sample
-in the combined space $(z_i, x^i_1, x^i_2, \ldots, x^i_T)$.
+Unfortunately this would likely mix poorly, since the sequence of latent states should be highly
+dependent on the cluster assignment. The ability to propose a new cluster and a new state sequence
+simultaneously avoids this problem, motivating the desire to blockwise sample
+in the combined space $(z_i, y^i_1, y^i_2, \ldots, y^i_T)$.
 \\\\
 Luckily the marginal posterior predictive distribution of a Dirichlet process has a particularly
 convenient form~\cite{infinite-gmm} given by
@@ -1211,7 +1227,7 @@ convenient form~\cite{infinite-gmm} given by
 \]
 Unlike proposing a latent state sequence, proposing $z_i$ from this distribution is straightforward.
 Incorporating this into the proposal distribution means the terms related to the Dirichlet Process
-can be neglected when calculating the acceptance ratio of the Metropolis within Gibbs sampler.
+will cancel, and can be neglected when calculating the acceptance ratio of the Metropolis within Gibbs sampler.
 
 
 \chapter{A Generative Model for Repetitive Sequences}
@@ -1583,21 +1599,21 @@ An example sequence is then generated from the following process.
 This procedure is repeated 10 times for each $k \in \{1,2,3,4\}$ resulting in 40
 total training sequences.
 \\\\
-Two clustering approaches are considered. The first utilizes standard \acp{HMM}
-as the base distribution and the second uses \acp{CHMM} as the base distribution.
+Two clustering approaches are considered. The \ac{DPMoHMM} utilizes standard \acp{HMM}
+as the base distribution and the \ac{DPMoCHMM} uses \acp{CHMM} as the base distribution.
 The experiment is repeated 10 times and the resulting clusterings are compared using
 \ac{AMI}~\cite{ami}, a version of Mutual Information corrected to adjust for chance agreements.
 Figure~\ref{fig:artificial-cluster-metrics} shows that as well as increased performance,
-in terms of \ac{AMI}, the Dirichlet Process with \ac{CHMM} base distributions finds
-the correct number of clusters in 80\% of experiments. This is in contrast to the standard
-\ac{HMM} which is unable to find the actual number of clusters in any of the experiments.
+in terms of \ac{AMI}, the \ac{DPMoCHMM} finds the correct number of clusters in 80\% of experiments.
+This is in contrast to the \ac{DPMoHMM}, which is unable to find the actual number of clusters in any
+of the experiments.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{./img/artificial-clusters.pdf}
     \caption[Visualization of synthetic sequence clusters]{
         Example from each cluster and recurrent structure
-        discovered by the Dirichlet Process mixture of HMMs with structured prior.
+        discovered by the \ac{DPMoCHMM}.
     }
     \label{fig:artificial-clusters}
 \end{figure}
@@ -1738,15 +1754,15 @@ The MAP sampled assignment is used to produce a point estimate of the parameters
 \section{Results}
 Table~\ref{table:segment-results} gives train and test set accuracy numbers for the
 considered classification methods. In general the Random Forest outperforms the other
-models in terms of raw accuracy, although the \ac{MoHMM} is quite competitive.
+models in terms of raw accuracy, although the \ac{MoCHMM} is quite competitive.
 The Structured Perceptron significantly under performs the other models,
 likely due to being restricted to linear decision boundaries as noted above.
 \\\\
-The same experiments as above were repeated for the Random Forest and \ac{MoHMM} fit with
+The same experiments as above were repeated for the Random Forest and \ac{MoCHMM} fit with
 the collapsed Gibbs sampler, but this time including a number of \emph{rest} sequences
 equal the most frequent activity. While the accuracy of the Random Forest degrades in this regime,
-surprisingly the accuracy of the \ac{MoHMM} increases. Inspecting performance for just the \emph{rest} class
-reveals this is at least in some part due to the \ac{MoHMM} doing a better job of modeling
+surprisingly the accuracy of the \ac{MoCHMM} increases. Inspecting performance for just the \emph{rest} class
+reveals this is at least in some part due to the \ac{MoCHMM} doing a better job of modeling
 the \emph{rest} class, the last two columns of Table~\ref{table:segment-results-rest}.
 The lower recall number for the Random Forest imply that approximately 25\% of the \emph{rest}
 sequences are misclassified as an activity.
@@ -1757,8 +1773,8 @@ sequences are misclassified as an activity.
     MAP Baseline & 0.043 & 0.037 \\
     Structured Perceptron & 0.681 & 0.598 \\
     Random Forest & 0.997 & \textbf{0.827} \\
-    MoHMM (Gibbs) & 0.848 & 0.775 \\
-    MoHMM (Viterbi) & 0.837 & 0.762 \\
+    MoCHMM (Gibbs) & 0.848 & 0.775 \\
+    MoCHMM (Viterbi) & 0.837 & 0.762 \\
     \end{tabular}
     \caption[Performance on the segmented exercise task]{
         Segment classification performance of different classifiers.
@@ -1770,7 +1786,7 @@ sequences are misclassified as an activity.
     \begin{tabular}{l r r r r r}\hline
     \textbf{Classifier} & \textbf{Train Acc.} & \textbf{Test Acc.} & \textbf{F1}    & \textbf{Precision} & \textbf{Recall} \\\hline
     Random Forest       & 0.995               & \textbf{0.81}      & 0.789          & \textbf{0.925}     & 0.755 \\
-    MoHMM (Gibbs)       & 0.829               & 0.799              & 0.790          & 0.81               & \textbf{0.829} \\
+    MoCHMM (Gibbs)       & 0.829               & 0.799              & 0.790          & 0.81               & \textbf{0.829} \\
     \end{tabular}
     \caption[Performance on the segmented exercise task with \emph{rest}]{
         Segment classification performance including the \emph{rest} class.
@@ -1798,11 +1814,6 @@ Analogous behavior would be observed in a \ac{iid} classification setting if man
 negative samples (\emph{rest}) were incorrectly labeled positively (\emph{exercise}).
 In contrast the \ac{CHMM} can perform this segmentation in an unsupervised manner simply by inspecting the
 inferred latent states.
-\\\\
-The ability to ``clean up'' erroneous or noisy segmentations puts the \ac{CHMM}
-in a unique position. As well as being able to form the basis of a competitive classifier,
-it can also serve as a valuable preprocessing tool to produce more accurate examples in
-classification settings where discriminative models ultimately prevail.
 
 \section{Unsupervised Segmentation}
 \label{sec:Unsupervised Segmentation}
@@ -1823,13 +1834,10 @@ Then the inferred start and stop times of the activity are given by
 Unfortunately, as the only annotations available are the ones which are to be corrected,
 it is difficult to define a performance metric to quantitatively evaluate the resulting segmentations.
 Instead, visual inspection of a random subset of exercises was used to qualitatively assess model performance.
-For a majority of inspected sequences the algorithm was able to produce nearly equivalent or superior segmentations
-when compared to those produced by the observer. Figure~\ref{fig:actseg} visually contrasts the segmentations
-produced by the \ac{CHMM} and those produced by the exercise observer.
 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}{\textwidth}
+    \begin{subfigure}{0.82\textwidth}
         \includegraphics[width=\textwidth]{img/segmentation/alt_db_bicep_curl.pdf}
         \caption{Alternating Dumbbell Bicep Curls.}
         \label{fig:actseg:alt-db-curl}
@@ -1839,7 +1847,7 @@ produced by the \ac{CHMM} and those produced by the exercise observer.
 \begin{figure}[H]
     \centering
     \ContinuedFloat
-    \begin{subfigure}{\textwidth}
+    \begin{subfigure}{0.82\textwidth}
         \includegraphics[width=\textwidth]{img/segmentation/burpee.pdf}
         \caption{Burpees.}
         \label{fig:actseg:burpee}
@@ -1849,8 +1857,8 @@ produced by the \ac{CHMM} and those produced by the exercise observer.
 \begin{figure}[H]
     \centering
     \ContinuedFloat
-    \begin{subfigure}{\textwidth}
-        \includegraphics[width=1\textwidth]{img/segmentation/push_up.pdf}
+    \begin{subfigure}{0.82\textwidth}
+        \includegraphics[width=\textwidth]{img/segmentation/push_up.pdf}
         \caption{Push-Ups.}
         \label{fig:actseg:push-up}
     \end{subfigure}
@@ -1865,66 +1873,218 @@ produced by the \ac{CHMM} and those produced by the exercise observer.
     \label{fig:actseg}
 \end{figure}
 
-Did you see that stuff in Figure~\ref{fig:actseg}, especially Figure~\ref{fig:actseg:burpee}.
+\section{Results}
+For a majority of inspected sequences the algorithm was able to produce nearly
+equivalent or superior segmentations when compared to those produced by the observer.
+Figure~\ref{fig:actseg} visually contrasts the segmentations produced by the \ac{CHMM}
+and those produced by the exercise observer. the ability of the \ac{CHMM} to produce
+superior annotations is particularly prevelant in Figures~\ref{fig:actseg:burpee}
+and~\ref{fig:actseg:push-up}.
+\\\\
+The ability to ``clean up'' erroneous or noisy segmentations puts the \ac{CHMM}
+in a unique position. As well as being able to form the basis of a competitive classifier,
+it can also serve as a valuable preprocessing tool to produce more accurate examples in
+classification settings where discriminative models ultimately prevail.
 
-\chapter{Inferring Exercise Types and Variations}
-\label{chap:Infering Exercise Types and Variations}
+\chapter{Clustering Exercise Types}
+\label{chap:Clustering Exercise Types}
 The experiments presented in Chapter~\ref{chap:Segmented Exercise Classification}
 and Chapter~\ref{chap:Segmenting Exercises} assume labels for the type of exercises
-being performed, as well as the number of unique types, are given during the parameter
-estimation phase. This Chapter explores the scenario when both pieces of information are
-assumed to be unavailable.
+being performed are given during the parameter estimation phase. This Chapter explores
+the scenario when the type of exercise being performed, and number of unique types is unknown.
 \\\\
 Given these assumptions, a natural task is to attempt to partition the
 set of individual sequences into clusters. Ideally these clusters would
 correspond to the types of exercise being performed. Since the number of
 unique types is also unknown the Bayesian nonparametric approach described in
 Section~\ref{sec:Mixtures of Hidden Markov Models}, and utilized to cluster
-artificial data in Section~\ref{sec:Clustering Sequences}, is used.
+artificial data in Section~\ref{sec:Clustering Sequences}, is used. To assess the
+value of the \ac{CHMM} structure experiments are carried out using either a \ac{CHMM}
+or \ac{HMM} base distribution.
 
-\section{Clustering Exercise Types}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{img/clustering.types/cluster-ami.pdf}
-    \caption{TODO: a caption.}
-    \label{fig:cluster-type-ami}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{img/clustering.types/cluster-correlation.pdf}
-    \caption{TODO: a caption.}
-    \label{fig:cluster-confustion}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{img/clustering.types/cluster-confusion.pdf}
-    \caption{TODO: a caption.}
-    \label{fig:cluster-confustion}
-\end{figure}
-
-
-\section{Clustering Exercise Variations}
-\label{sec:Infering Variations}
-The exercise labeling scheme discussed in Section~\ref{sec:Exercise Taxonomy}
-has a natural hierarchical structured. For the purpose of this Section, the base type
-is taken to be the \emph{modifier}, \emph{equipment}, and \emph{exercise} portions
-of the label, and the subtype is taken to be the \emph{form variation} portion.
-Given this type hierarchy the experiment presented in this Section seeks to quantify
-the ability of a Dirichlet process mixture of \acp{CHMM} to cluster variations of the
-the same base exercise type.
+\section{Experiment Setup}
+The ability of the \ac{DPMoCHMM} and \ac{DPMoHMM} to cluster exercises is assessed
+using three and nine exercises classes. To measure the effect of dataset size the number of
+exercise sequences used to estimate model parameters is varied as well. For the experiments
+carried out with 3 classes 10, 20, 40, 60, and 100 example sequences from each class are used,
+resulting in 30, 60, 120, 180, and 262 total samples\footnote{For some exercise we did not
+have 100 samples, resulting in 262 samples rather than 300}. For the experiments carried out with
+9 classes 10 and 90 example sequences from each class are used, resulting in 90 and 360 total samples.
 \\\\
-Automatically clustering exercises into subtypes has a variety of practical applications.
-From a data collection perspective, having a estimate of the number of actual subtypes present
-in a dataset can inform the collector whether the number of identified subtypes is sufficiently broad
-to cover the number of actual number of variations, or alternatively overly specific.
-If the end goal is classification, splitting classes into subclasses can potentially
-increase classifier accuracy due to a reduction in intra-class variability.
+For each experimental setup (number of classes and number of sample sequences)
+15 models of each type were fit to allow averaging performance metrics and assess model stability.
+The parameters of each model are fit using a different randomly selected subset of the available data,
+although the same random subsets are used for both the \ac{DPMoHMM} and \ac{DPMoCHMM} to enable
+staightforward comparison. Table~\ref{table:cluster-experiment} lists the exercises used.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{r | p{8cm}}\hline
+    \textbf{Classes} & \textbf{Exercises} \\\hline
+    3 &  burpees, sit-ups, dumbbell lateral raises\\\hline
+    9 & dumbbell tricep extension, jumping jacks, burpees, sit-ups, dumbbell lateral raises, box jumps, alternating dumbbell bicep curls, push-ups, pull-ups\\
+    \end{tabular}
+    \caption[Exercises used in clustering experiments]{
+        Exercises used in clustering experiments.
+    }
+    \label{table:cluster-experiment}
+\end{table}
+
+\section{Results}
+In both the three and nine class experiments the \ac{DPMoCHMM}
+is able to produce fairly accurate clusterings as measured by
+\ac{AMI}, and in all cases outperforms the \ac{DPMoHMM}, Table~\ref{table:cluster-types-ami}.
+This provides further support for the benefit of incorporating prior
+structure into the model. There also appears to be a much stronger
+relationship between \ac{AMI} and the complete data log likelihood for the
+\ac{DPMoCHMM} than the \ac{DPMoHMM}, Figure~\ref{fig:cluster-type-correlation}.
+This is especially important since one would not have access to the label required
+to compute \ac{AMI} in a real world clustering scenario, and alternate measures of performance,
+such as likelihood, would need to be used to evaluate model performance.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{r | r | c r r | c r r}\hline
+    \multirow{2}{*}{\textbf{Classes}} & \multirow{2}{*}{\textbf{Size}} & \multicolumn{3}{c |}{\textbf{Flat}} & \multicolumn{3}{c}{\textbf{Cycle}} \\\cline{3-8}
+    & & AMI & Fail & Success & AMI & Fail & Success \\\hline
+    $3$ & $30$ & $0.30 \pm 0.27$ & $6$ & $2$ & $0.56 \pm 0.28$ & $2$ & $7$\\
+    $3$ & $60$ & $0.38 \pm 0.21$ & $3$ & $0$ & $0.65 \pm 0.13$ & $0$ & $11$\\
+    $3$ & $120$ & $0.23 \pm 0.25$ & $8$ & $0$ & $0.59 \pm 0.25$ & $1$ & $8$\\
+    $3$ & $180$ & $0.30 \pm 0.25$ & $6$ & $1$ & $0.69 \pm 0.24$ & $1$ & $11$\\
+    $3$ & $262$ & $0.41 \pm 0.31$ & $5$ & $4$ & $0.65 \pm 0.14$ & $0$ & $8$\\\hline
+    $9$ & $90$ & $0.30 \pm 0.11$ & $0$ & $0$ & $0.49 \pm 0.07$ & $0$ & $1$\\
+    $9$ & $360$ & $0.34 \pm 0.13$ & $0$ & $0$ & $0.62 \pm 0.07$ & $0$ & $10$\\
+    \end{tabular}
+    \caption[Unsupervised clustering performance]{
+        Comparison of unsupervised clustering with \ac{HMM} and \ac{CHMM} base distributions.
+        Reported AMI is the mean $\pm$ 1 standard deviation. The fail and success columns count
+        the number of runs (of 15) resulting in an AMI less than $0.1$ and greater than $0.6$ respectively.
+        The model using \ac{CHMM} base distributions consistently has higher performance overall,
+        more successful runs, and is less prone to failure in the 3 class case.
+    }
+    \label{table:cluster-types-ami}
+\end{table}
+
+As well as \ac{AMI} the resulting clusters were also assessed in terms of
+supervised accuracy. To do so each cluster was assigned the label of the most
+frequently appearing exercise class within that cluster. The resulting confusion
+matrices and raw accuracies are given in Figure~\ref{fig:cluster-type-confusion}.
+Although such numbers are not meaningful on their own, putting every sample in its
+own cluster would result in 100\% accuracy, Figure~\ref{fig:cluster-type-counts} shows that
+this is not the case in the experiments presented here.
+\\\\
+Although the results presented here are quite positive, there are several ways in
+which the \ac{DPMoCHMM} does not perform adequately. The first, and most disheartening,
+is largely a failure of the sampler. Occasionally the sampler would get stuck in poor
+initial clusterings from which it was unable to escape. Typically this resulted in all
+sequences being assigned a single cluster. This is not entirely surprising, considering that
+the sampler is unable to move multiple sequences in a single step. An attempt to approximately
+count the number of such failures are given in the \emph{Fail} column in Table~\ref{table:cluster-types-ami}.
+\\\\
+The second noteable point of failure is the inability of the sampler to discover the correct
+number of true exercises, especially in the nine class case, Figure~\ref{fig:cluster-type-counts}.
+This is likely due to the mismatch between the actual distribution of clusters and the
+Dirichlet process. Replacing the Dirichlet process with other stochastic pocesses which
+allow more control over tail behavior, such as the Pitman-Yor process \cite{pitman-yor-teh},
+is a promising direction for future research.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{img/clustering.types/cluster-correlation.pdf}
+        \caption{Three Exercises}
+        \label{fig:cluster-type-confusion-3}
+    \end{subfigure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{img/clustering.types/large-cluster-correlation.pdf}
+        \caption{Nine Exercises}
+        \label{fig:cluster-type-confusion-9}
+    \end{subfigure}
+    \caption[Relationship between log likelihood and AMI]{
+        Relationship between joint log likelihood and clustering performance as measured
+        by AMI for various number of sample seqeunces. Solid lines give best linear fit
+        to the observed data. Shaded regions depict 95\% confidence intervals computed using
+        5,000 bootstrap resamples. As can be seen, there is a much stronger trend for higher
+        log likelihood to result in increased performance as measured by AMI when using a
+        \ac{CHMM} (blue) base distribution than when using a standard \ac{HMM} (red).
+    }
+    \label{fig:cluster-type-correlation}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{img/clustering.types/cluster-counts.pdf}
+        \caption{Three Exercises.}
+        \label{fig:cluster-type-counts-3}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{img/clustering.types/large-cluster-counts.pdf}
+        \caption{Nine Exercises.}
+        \label{fig:cluster-type-counts-9}
+    \end{subfigure}
+    \caption[Number of discovered clusters]{
+        Histogram of the number of clusters discovered by the DPMoHMM (red) and DPMoCHMM (blue)
+        when using 3 (\subref{fig:cluster-type-counts-3}) and 9 (\subref{fig:cluster-type-counts-9})
+        different exercises.
+    }
+    \label{fig:cluster-type-counts}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{img/clustering.types/cluster-confusion-3.pdf}
+        \caption{Three Exercises.}
+        \label{fig:cluster-type-confusion-3}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{img/clustering.types/cluster-confusion-9.pdf}
+        \caption{Nine Exercises.}
+        \label{fig:cluster-type-confusion-9}
+    \end{subfigure}
+    \caption[Clustering confusion matrices]{
+        Confusion matrices for the DPMoCHMM using 3 and 9 exercises classes.
+        Each cluster is assigned the label of the most frequently appearing class.
+        The resulting accuracies from upper left to lower right in
+        (\subref{fig:cluster-type-confusion-3}) are 76\%, 89\%, 87\%, and 87\%,
+        and from left to right in (\subref{fig:cluster-type-confusion-9}) are
+        61\% and 69\%.
+    }
+    \label{fig:cluster-type-confusion}
+\end{figure}
 
 
-\chapter{Conclusion}
+\chapter{Conclusions and Future Directions}
 \label{chap:Conclusion}
+This thesis introduced the \ac{CHMM}, a generative model specifically designed to
+capture repetitive structure in time series. In contrast to much work, the \ac{CHMM}
+is a restriction, rather than an elaboration, of a popular and well known Machine Learning
+technique, the \ac{HMM}. Restricting capacity in such a way that a model is encouraged to use
+its remaining capacity to discover structure was empirically shown to be a powerful technique
+through classification, segmentation, and clustering experiments with real world time series data.
+In Chapter~\ref{chap: A Generative Model for Repetitive Sequences} the \ac{CHMM} is motivated
+by an automata theoretical analogy. The use of similar techniques to capture other types of
+structure and in other \acp{PGM} is an interesting direction for future research.
+\\\\
+To cluster time series with an unknown number of types, Dirichlet process mixtures of \acp{HMM}
+were also introduced. A novel collapsed block Gibbs sampler was derived to support inference in this model.
+Due to working exclusively in the collapsed space, this sampler is able to simultaneously update the
+cluster assignment and descendent latent states associated with a particular example. This technique is likely to be
+useful in other mixture type models which feature a strong coupling between the mixture assignment
+and latent variables of the base distribution.
+\\\\
+Despite performing well in the task considered here, the proposed sampler occasionally becomes stuck
+in poor modes when applied to Dirichlet process mixture models. The analysis carried out in
+Chapter~\ref{chap:Clustering Exercise Types} suggest several ways to overcome this limitation.
+Due the the success of most runs, methods featuring multiple independent chains starting from
+different random initializations are especially promising. This includes techniques such
+as parallel tempering~\cite{learn-neighbor-mcmc} and tempered transitions~\cite{neal-tempered},
+which are well suited to dealing with poor mixing in multi-modal settings.
 
 \bibliographystyle{plain}
 \bibliography{tllake.thesis}
