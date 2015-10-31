@@ -2,7 +2,7 @@
 \documentclass[12pt]{report}
 \usepackage{amsmath, amssymb, amsthm, mathtools}
 % \usepackage{tocbibind}
-\usepackage[left=1.5in,right=1.5in,top=1.25in,bottom=1.25in]{geometry}
+\usepackage[left=1.5in,right=1.5in,top=1.25in,bottom=1.5in]{geometry}
 \usepackage{bm}
 \usepackage{bbm}
 \usepackage{fancyhdr}
@@ -237,29 +237,31 @@ Considerable attention has been given to the problem of automated structure disc
 Algorithms for structure discovery typically start as a blank slate, attempting to induce structure
 from observations alone.
 \\\\
-On the other hand, when applying Machine Learning to solve real world problems, there is
-often background knowledge available about the target domain. The ability to exploit
+On the other hand, when applying Machine Learning to solve real world problems there is
+often background information available about the target domain. The ability to exploit
 this knowledge to enable or improve potential solutions is of obvious virtue.
-When this domain knowledge can be expressed in the form of dependencies which are known to exist
-or not exist a priori, this knowledge can be easily incorporated into the \ac{PGM} formalism.
-When domain knowledge is more nebulous, and can not straightforwardly be expressed in the form
-of dependencies, incorporating this knowledge becomes more difficult. Examples of this sort of
-knowledge include repetition in music, symmetry in images, and locality in space.
+% When this domain knowledge can be expressed in the form of dependencies which are known to exist
+% or not exist a priori, it can be easily incorporated into the \ac{PGM} formalism.
+When this domain knowledge can be expressed in the form of dependencies
+it can be easily incorporated into the \ac{PGM} formalism.
+When domain knowledge is more nebulous and can not straightforwardly be expressed in the form
+of dependencies, incorporating it becomes more difficult. Examples of the later include
+repetition in music, symmetry in images, and locality in space.
 In the context of \acp{PGM}, the later has been addressed effectively through the use of
-grid-structured models, and similar techniques could likely be employed to capture notions
+grid-structured models. Similar techniques could likely be employed to capture notions
 of symmetry. Taking inspiration from these methods this work focuses on repetition
-in time series, using several tasks in the activity recognition domain as motivating examples.
+in time series using several tasks in the activity recognition domain as motivating examples.
 
 \section{Contributions}
 The most important contribution of this work is the identification and empirical exploration of
 a subclass of \acp{HMM} especially well suited to capture repetitive structure in time series.
-The subclass of \ac{HMM} considered here is less computationally demanding than a standard \ac{HMM},
+The subclass of \ac{HMM} considered here is less computationally demanding than a standard \ac{HMM}
 and is shown to perform well on a variety of activity recognition tasks both within the supervised
 and unsupervised learning framework. Furthermore, interpreting the latent state sequence
 found by these models yields highly accurate repetition counts.
 \\\\
 To further demonstrate the effectiveness of this subclass of \ac{HMM}, it is utilized as
-the base distribution in a Bayesian nonparametric mixture model. To the author's knowledge,
+the base distribution in a Bayesian nonparametric mixture model. To the author's knowledge
 nonparametric mixtures of \acp{HMM} have not been previously discussed in the literature.
 To support inference in this model this work extends the collapsed block Gibbs sampler
 of \cite{pcfg-bayesian-johnson} to jointly sample in the space of cluster assignments and
@@ -310,7 +312,7 @@ The remainder of this thesis is organized as follows:
 \begin{quote}
     Chapter~\ref{chap:Activity Data} describes the dataset used
     for the real world experiments presented in this thesis.
-    This includes both the methodologies used for data collection,
+    This includes both the methodologies used for data collection
     and labeling schemes developed to support subsequent experiments.
 \end{quote}
 
@@ -362,13 +364,13 @@ and commercial applications. These applications target a diverse set of domains
 including fitness~\cite{long-term-devices},
 health status monitoring~\cite{elderly,health-survey},
 and workplace safety~\cite{assembly-activity}.
-Despite the variety of applications, a common underlying theme to most of these
+Despite the variety of applications a common underlying theme to most of these
 works is \ac{HAR}, the act of identifying what activity the wearer is engaged in at a given time.
 Upon further consideration this is to be expected; the ability of a system to provide
 meaningful output is dependent on the ability to \emph{understand} the current context.
 Informally a \ac{HAR} system can be described as a mapping from sequential
 input data to an ordered list of activities. The specifics of the input data, as well
-as the type and granularity of the recognized activities, varies greatly from system to system.
+as the type and granularity of the recognized activities varies greatly from system to system.
 
 \section{Sensors}
 \label{sec:HAR-Sensors}
@@ -431,7 +433,7 @@ closely related to problem of Gesture Recognition \cite{gesture-recognition}.
 Several works have focused on crossing the boundaries between broad and narrow
 categories using either an implicit or explicit hierarchical decomposition of
 activities~\cite{hierarchical-thesis,factored-hmm-tran}.
-In this framework, potentially shared, narrow activities are combined to form broad activities.
+In this framework potentially shared narrow activities are combined to form broad activities.
 To date, these systems do not use a number of broad activities that would be necessary to fully
 segment an entire day into activity categories.
 
@@ -472,7 +474,7 @@ described above.
 
 \section{Windows and Features}
 \label{sec:HAR Windows and Features}
-The \ac{HAR} problem if commonly decomposed into a series of independent decisions
+The \ac{HAR} problem is commonly decomposed into a series of independent decisions
 problems~\cite{assembly-activity,tutorial-bulling,ms-activity,phone-kwapisz}.
 When this approach is used the resulting classifier operates over fixed size temporal
 windows of the data, which will be referred to as \emph{windowing}.
@@ -518,7 +520,7 @@ to leverage the vast array of classification techniques suitable only for static
 inputs. Another advantage of windowing is it allows predictions to be obtained in
 a near realtime manner, as prediction lag is only fundamentally limited by the size
 of the window. This is in contrast with classification methods designed specifically
-to work with sequential data, which typically involve some sort of inference procedure
+to work with sequential data, which typically involve inference procedures
 to handle temporal dependencies between observations and/or predictions.
 \\\\
 Despite the advantages of windowing, neglecting the sequential nature of the problem
@@ -575,7 +577,7 @@ are used to segment and cluster raw activity data. Their proposed approach consi
 iteratively building up a set a set of motifs from the raw data, refining the motifs,
 and then training an \ac{HMM} for each motif. The \acp{HMM} are then used to segment and classify
 sequences containing 6 unique dumbbell exercises. Although their reported results are promising,
-details regarding the number of participants, and whether their system was evaluated on
+details regarding the number of participants and whether their system was evaluated on
 out-of-sample participants were omitted. Their proposed system also requires the user manually
 specify a large number of hyperparameters such as window size, number of motifs, number of \ac{HMM} states,
 and several parameters for the motif refinement algorithm.
@@ -613,7 +615,7 @@ The device collects 3-axis accelerometer and 3-axis gyroscope readings at 15Hz.
 This data is transferred in real-time to a PC using Blue Tooth Low Energy (BLE).
 
 \section{Data Collection Methodology}
-Participants in the data collection project were volunteers recruited utilizing social media
+Participants in the data collection project were volunteers recruited through social media
 and word of mouth. In addition to sensor data, demographic information including age, sex, height, weight,
 and a self reported expertise level was recorded.
 \\\\
@@ -645,8 +647,8 @@ which is always used, but the second type (one to many) is more difficult to han
 \\\\
 The second type of ambiguity typically involves positioning, resulting in exercises that are visually similar
 but whose sensor readings can be drastically different.
-Examples include supinated (underhand) vs pronated (overhand) for pull-ups and dumbbell curls,
-or hands on temple vs hands behind head vs arms crossed for sit-ups and crunches. To solve this problem
+Examples include supinated (underhand) vs.\ pronated (overhand) for pull-ups and dumbbell curls,
+or hands on temple vs.\ hands behind head vs.\ arms crossed for sit-ups and crunches. To solve this problem
 a standard naming convention for exercises which include form variations was defined. This allows grouping
 form variations into different classes, which was found to be beneficial for some classifiers.
 The final naming convention we adopted is
@@ -654,13 +656,13 @@ The final naming convention we adopted is
     \m{[modifier] [equipment] <exercise> [(form variation)]}
 \]
 where square brackets and angle brackets denote optional and required arguments respectively.
-This convention results in exercise names such as
+This convention results in exercise names such as:
 \[
     \underbrace{\text{alternating}}_{\text{modifier}} \; \underbrace{\text{dumbbell}}_{\text{equipment}} \; \underbrace{\text{bicep curl}}_{\text{exercise}} \; \underbrace{\text{(start with wrist facing forward)}}_{\text{form variation}}
 \]
 and
 \[
-    \underbrace{}_{\text{modifier}} \; \underbrace{}_{\text{equipment}} \; \underbrace{\text{pull-up}}_{\text{exercise}} \; \underbrace{\text{(supinated)}}_{\text{form variation}}
+    \underbrace{}_{\text{modifier}} \; \underbrace{}_{\text{equipment}} \; \underbrace{\text{pull-up}}_{\text{exercise}} \; \underbrace{\text{(supinated)}}_{\text{form variation}}.
 \]
 
 \chapter{Hidden Markov Models}
@@ -669,13 +671,13 @@ and
 In the spirit of self containment this chapter introduces common terminology,
 methods and inference algorithms employed when working with \acp{HMM}. In particular
 the focus is on Bayesian methods. For a more standard introduction see Kevin Murphy's
-excellent thesis~\cite{murphy-thesis}, which also discusses the more general class of probabilistic models
+thesis~\cite{murphy-thesis}, which also discusses the more general class of probabilistic models
 known as \acp{DBN}, of which \acp{HMM} and the popular Kalman filter~\cite{kalman-filter}, are a member.
 
 \section{Introduction to Hidden Markov Models}
 \label{sec:Introduction to Hidden Markov Models}
 \acp{HMM} are probabilistic state-space models for sequential data.
-The states in an \ac{HMM} are members of a finite discrete set, and
+The states in an \ac{HMM} are members of a finite discrete set and
 can be partitioned into a set of observed variables $X$, and latent
 (unobserved) variables $Y$. The latent variables evolve according to
 a first order Markov process:
@@ -738,7 +740,7 @@ and grey vertices represent observed variables.
         Slice representation of a HMM.
         Conditional dependencies and random variables are denoted by
         directed edges and vertices respectively. Shaded vertices correspond
-        to random variables which are be observed.
+        to random variables which are assumed to be observed.
     }
     \label{fig:hmm}
 \end{figure}
@@ -911,7 +913,7 @@ of parameters that need to be sampled frequently results in increased efficiency
 
 \subsection{The Bayesian Hidden Markov Model}
 Since the initial and transition distributions of an \ac{HMM} are Categorical distributions
-it is convenient, due to the above described conjugacy relation, to place Dirichlet priors
+it is convenient; due to the above described conjugacy relation, to place Dirichlet priors
 with parameters $\alpha_0$ and $\alpha_i$ over their parameters $\pi_0$ and $\pi_i$.
 Assuming each state's emission distribution is also Categorical
 with parameters $\theta_i$, a Dirichlet prior with parameters $\alpha_i^\p$ may be placed
@@ -959,13 +961,13 @@ and rewriting in terms of the counting variables gives,
 
 Repeatedly applying the same steps used to derive (\ref{eq:dir-int-sol})
 allows one to write the marginal joint probability of $(\mathcal{X}, \mathcal{Y})$
-in terms of hyperparameters and counts.
+in terms of hyperparameters and counts
 
 \begin{equation}
     P(\mathcal{X}, \mathcal{Y} \mid \alpha_0, \alpha_i, \alpha_i^\prime)
     = \frac{\Bf((\bm{n}_0 + \alpha_0)}{\Bf(\alpha_0)}
     \prod_i \frac{\Bf{(\bm{n}_i + \alpha_i}}{\Bf(\alpha_i)}
-    \frac{\Bf((\bm{n}_i^\p + \alpha_i^\p)}{\Bf(\alpha_i^\p)}
+    \frac{\Bf((\bm{n}_i^\p + \alpha_i^\p)}{\Bf(\alpha_i^\p)},
     \label{eq:marg-likelihood-hmm}
 \end{equation}
 
@@ -1031,7 +1033,8 @@ for \acp{HMM} in~\cite{hmm-comparison-johnson}.
     }
     \label{fig:hmm-marg}
 \end{figure}
-The primary difficulty in constructing such a sampler is due to marginalizing over the parameters,
+
+The primary difficulty in constructing such a sampler is due to \mbox{marginalizing} over the parameters,
 as doing so introduces dependencies among the latent state sequences $\mathcal{Y}$, Figure~\ref{fig:hmm-marg}.
 Let us proceed in the usual manner for constructing such a Gibbs sampler. We have
 
@@ -1191,7 +1194,7 @@ techniques such as cross validation or Bayesian Information Criterion, but this 
 often computationally difficult and methodologically unsatisfying. A modern
 approach to dealing with this problem is Bayesian nonparametrics~\cite{jordan-bayesian-nonparam}.
 In brief, Bayesian nonparametric techniques allow one to sidestep the problems associated with finite
-capacity models, by assuming observations are generated from infinite dimensional objects,
+capacity models by assuming observations are generated from infinite dimensional objects,
 for which only a finite number are involved in the generation of a finite set of samples.
 \\\\
 In the case of mixture models, the above model can naturally be extended to handle a
@@ -1280,7 +1283,7 @@ structured knowledge via latent variables and conditional dependencies into the
 models~\cite{structured-priors,poverty-stimulus,how-to-grow-a-mind}.
 This is true even in the case when the structure itself is unobserved, and must
 be learned in an unsupervised manner. This chapter describes a structured generative model for
-repetitive sequences. The model is a \ac{HMM} with cyclically structured transitions which,
+repetitive sequences. The model is a \ac{HMM} with cyclically structured transitions which
 for brevity, will be dubbed the \ac{CHMM}.
 \\\\
 This model is specifically designed to reflect the structure of the repetitive sequences
@@ -1436,10 +1439,10 @@ This basic, and surprisingly simple model is elaborated in various ways to solve
 number of synthetic and real world tasks related to motion recognition in the following chapters.
 Not only does the \ac{CHMM} inherently capture the repetitive nature of exercise, but due to the
 highly structured transition distribution a \ac{CHMM} with $K$ states only has $O(K)$ transition
-parameters\footnote{A \ac{CHMM} with $K$ states has exactly $2K$ transition parameters.}.
+parameters.\footnote{A \ac{CHMM} with $K$ states has exactly $2K$ transition parameters.}
 This is unlike a \ac{HMM} in which every state can transition
 to every other state which has $O(K^2)$ transition parameters.
-This reduction in parameters should require less data to estimate,
+This reduction in parameters should require less data to estimate
 and reduces the computational complexity of typical inference tasks such as
 filtering, smoothing, and decoding from $O(TK^2)$ to $O(TK)$.
 
@@ -1453,9 +1456,9 @@ with real world data are presented in the following chapters.
 
 \section{The Trick Coin}
 The \emph{trick coin} is a classic \ac{HMM} problem as it is described exactly
-by the \ac{HMM} generative story. In this scenario there are two coins, one fair,
+by the \ac{HMM} generative story. In this scenario there are two coins, one fair
 and the other biased to come up tails with significantly higher probability than heads.
-A sequence of flip outcomes is observed, however at each time step the flipper chooses
+A sequence of flip outcomes is observed. At each time step the flipper chooses
 to swaps coins, replacing the fair coin with the biased coin or vice versa with some probability.
 This scenario can be modeled by an \ac{HMM} in which the latent
 states represent the coin being used, the observations the observed outcomes, and
@@ -1467,7 +1470,7 @@ either the collapsed Gibbs sampler or the standard \ac{EM}
 the Baum-Welch algorithm.}
 estimation method.
 \\\\
-The resulting \ac{HMM}'s performance was assessed on two tasks. 1.) Inferring
+The resulting \ac{HMM}'s performance was assessed on two tasks 1.) Inferring
 the coin being used at each time of the training sequence, and 2.) Discriminating between an
 out of sample sequence of flips drawn from the two coin switching process or a single coin with the
 same expected value as the trick coin.
@@ -1537,8 +1540,8 @@ discriminative classifier) an unsupervised approach is taken, in which only the 
 is available during training. Thus the ability to discover structure in the time series rests
 entirely on a priori structure built into the model itself.
 \\\\
-To capture this structure the prior distribution over transition matrices
-(a Dirichlet distribution for each row) is split into three regime blocks.
+To capture this structure the prior distributions over transition matrices
+(a Dirichlet distribution for each row) are split into three regime blocks.
 The first and third block corresponds to a standard \ac{HMM}
 in which each state may transition to every other state, the \emph{out} portions of the sequence.
 The second block corresponds to the \ac{CHMM} structure in which states transition
@@ -1591,7 +1594,7 @@ Here the $\alpha_i$ terms are parameters of a prior on transitions from
 Using just 2 sample sequences and the above described prior structure with
 1 \emph{out} state and 5 \emph{in} states allows the collapsed Gibbs sampler
 to discover highly accurate segmentations in a completely unsupervised manner,
-Figure~\ref{fig:artificial-segmentation-struct}. To demonstrate the necessity for the prior,
+Figure~\ref{fig:artificial-segmentation-struct}. To demonstrate the necessity for the prior
 and rule out the possibility that the model is doing something uninteresting (such
 as modeling differences in variance within the distinct regimes) the same experiment
 was repeated with a standard \ac{HMM} with two states. In this case, the model is completely
@@ -1641,7 +1644,7 @@ An example sequence is then generated from the following process.
 This procedure is repeated 10 times for each $k \in \{1,2,3,4\}$ resulting in 40
 total training sequences.
 \\\\
-Two clustering approaches are considered. The \ac{DPMoHMM} utilizes standard \acp{HMM}
+Two clustering approaches are considered. The \ac{DPMoHMM} uses standard \acp{HMM}
 as the base distribution and the \ac{DPMoCHMM} uses \acp{CHMM} as the base distribution.
 The experiment is repeated 10 times and the resulting clusterings are compared using
 \ac{AMI}~\cite{ami}, a version of Mutual Information corrected to adjust for chance agreements.
@@ -1708,7 +1711,7 @@ analogous split of the training data. Table~\ref{table:segment-dataset} summariz
 \section{Models}
 The proposed \ac{CHMM} was compared to a Structured Perceptron~\cite{perceptron-collins}
 and a strong performing system heavily influenced from the activity recognition literature~\cite{ms-activity}.
-As only sequences with a single label are considered in this experiment, a voting procedure is used
+As only sequences with a single label are considered in this experiment a voting procedure is used
 to aggregate predictions for individual time steps to produce the final classification for both
 the Random Forest and Structured Perceptron. Note that this gives an unfair advantage to these
 models. In a real world activity classification setting one would not a priori have knowledge of
@@ -1748,7 +1751,7 @@ Best performing settings on the validation set are noted in bold.
 
 \subsection{Structured Perceptron}
 The Structured Perceptron is a discriminative analog of a \ac{HMM}.
-It is worth noting this claim is somewhat tenuous, and it might
+It is worth noting this claim is somewhat tenuous. It might
 be considered more appropriate to say this is only true of the closely
 related \ac{CRF}, which models $P(Y|X)$ as opposed to a \ac{HMM}
 which models $P(Y,X)$. Regardless, both are chain structured discriminative
@@ -1842,7 +1845,7 @@ Another important observation is the significant performance degradation of the 
 on unseen data. Performance of the Random Forest decreases by 17\% and 18.5\% on unseen data
 for the two experiments described here, a significant amount compared to the more mild 8\% and 4\%
 percent decreases obtained by the \ac{MoHMM}. Several attempts were made to combat overfitting in
-the Random Forest, largely by reducing the complexity of the individual ensemble members, however
+the Random Forest, largely by reducing the complexity of the individual ensemble members. However,
 in all cases this resulted in decreased test performance.
 
 
@@ -1860,7 +1863,7 @@ inferred latent states.
 \section{Unsupervised Segmentation}
 \label{sec:Unsupervised Segmentation}
 The system described in Section~\ref{sec:Learning to Segment Repetitive Sequences} was applied unmodified
-to the task of segmenting exercise boundaries. For each class, the parameters of a single \ac{CHMM}
+to the task of segmenting exercise boundaries. For each class the parameters of a single \ac{CHMM}
 were estimated using all available data for that class. The resulting parameters were then
 used to infer the \ac{MAP} latent state sequences $\seq{y}{1}{T}$ for each sequence.
 \\\\
@@ -1919,7 +1922,7 @@ Instead, visual inspection of a random subset of exercises was used to qualitati
 For a majority of inspected sequences the algorithm was able to produce nearly
 equivalent or superior segmentations when compared to those produced by the observer.
 Figure~\ref{fig:actseg} visually contrasts the segmentations produced by the \ac{CHMM}
-and those produced by the exercise observer. the ability of the \ac{CHMM} to produce
+and those produced by the exercise observer. The ability of the \ac{CHMM} to produce
 superior annotations is particularly prevalent in Figures~\ref{fig:actseg:burpee}
 and~\ref{fig:actseg:push-up}.
 \\\\
@@ -1933,14 +1936,14 @@ classification settings where discriminative models ultimately prevail.
 The experiments presented in Chapter~\ref{chap:Segmented Exercise Classification}
 and Chapter~\ref{chap:Segmenting Exercises} assume labels for the type of exercises
 being performed are given during the parameter estimation phase. This Chapter explores
-the scenario when the type of exercise being performed, and number of unique types is unknown.
+the scenario when the type of exercise being performed and number of unique types is unknown.
 \\\\
 Given these assumptions, a natural task is to attempt to partition the
 set of individual sequences into clusters. Ideally these clusters would
 correspond to the types of exercise being performed. Since the number of
 unique types is also unknown the Bayesian nonparametric approach described in
 Section~\ref{sec:Mixtures of Hidden Markov Models}, and utilized to cluster
-artificial data in Section~\ref{sec:Clustering Sequences}, is used. To assess the
+artificial data in Section~\ref{sec:Clustering Sequences} is used. To assess the
 value of the \ac{CHMM} structure experiments are carried out using either a \ac{CHMM}
 or \ac{HMM} base distribution.
 
@@ -1949,8 +1952,8 @@ The ability of the \ac{DPMoCHMM} and \ac{DPMoHMM} to cluster exercises is assess
 using three and nine exercises classes. To measure the effect of dataset size the number of
 exercise sequences used to estimate model parameters is varied as well. For the experiments
 carried out with 3 classes 10, 20, 40, 60, and 100 example sequences from each class are used,
-resulting in 30, 60, 120, 180, and 262 total samples\footnote{For some exercise we did not
-have 100 samples, resulting in 262 samples rather than 300}. For the experiments carried out with
+resulting in 30, 60, 120, 180, and 262 total samples.\footnote{For some exercise we did not
+have 100 samples, resulting in 262 samples rather than 300} For the experiments carried out with
 9 classes 10 and 90 example sequences from each class are used, resulting in 90 and 360 total samples.
 \\\\
 For each experimental setup (number of classes and number of sample sequences)
@@ -1981,7 +1984,7 @@ structure into the model. There also appears to be a much stronger
 relationship between \ac{AMI} and the complete data log likelihood for the
 \ac{DPMoCHMM} than the \ac{DPMoHMM}, Figure~\ref{fig:cluster-type-correlation}.
 This is especially important since one would not have access to the label required
-to compute \ac{AMI} in a real world clustering scenario, and alternate measures of performance,
+to compute \ac{AMI} in a real world clustering scenario. Alternate measures of performance,
 such as likelihood, would need to be used to evaluate model performance.
 
 \begin{table}[H]
@@ -2008,18 +2011,18 @@ such as likelihood, would need to be used to evaluate model performance.
 \end{table}
 
 As well as \ac{AMI} the resulting clusters were also assessed in terms of
-supervised accuracy. To do so each cluster was assigned the label of the most
+supervised accuracy. To do so each of the clusters was assigned the label of the most
 frequently appearing exercise class within that cluster. The resulting confusion
 matrices and raw accuracies are given in Figure~\ref{fig:cluster-type-confusion}.
-Although such numbers are not meaningful on their own, putting every sample in its
-own cluster would result in 100\% accuracy, Figure~\ref{fig:cluster-type-counts} shows that
-this is not the case in the experiments presented here.
+Such numbers are not meaningful on their own as putting every sample in its
+own cluster would result in 100\% accuracy. Figure~\ref{fig:cluster-type-counts} shows that
+this is not the case in the experiments presented here. % TODO: fix this last sentence
 \\\\
 Although the results presented here are quite positive, there are several ways in
-which the \ac{DPMoCHMM} does not perform adequately. The first, and most disheartening,
+which the \ac{DPMoCHMM} does not perform adequately. The first, and most disheartening
 is largely a failure of the sampler. Occasionally the sampler would get stuck in poor
 initial clusterings from which it was unable to escape. Typically this resulted in all
-sequences being assigned a single cluster. This is not entirely surprising, considering that
+sequences being assigned a single cluster. This is not entirely surprising considering that
 the sampler is unable to move multiple sequences in a single step. An attempt to approximately
 count the number of such failures are given in the \emph{Fail} column in Table~\ref{table:cluster-types-ami}.
 \\\\
@@ -2101,11 +2104,11 @@ is a promising direction for future research.
 \end{figure}
 
 
-\chapter{Conclusions and Future Directions}
+\chapter{Conclusion}
 \label{chap:Conclusion}
 This thesis introduced the \ac{CHMM}, a generative model specifically designed to
 capture repetitive structure in time series. In contrast to much work, the \ac{CHMM}
-is a restriction, rather than an elaboration, of a popular and well known Machine Learning
+is a restriction, rather than an elaboration of a popular and well known Machine Learning
 technique, the \ac{HMM}. Restricting capacity in such a way that a model is encouraged to use
 its remaining capacity to discover structure was empirically shown to be a powerful technique
 through classification, segmentation, and clustering experiments with real world time series data.
