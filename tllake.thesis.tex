@@ -136,8 +136,18 @@
 % \chapter*{Declaration}
 % I declare that this has taken too long
 %
+\addcontentsline{toc}{chapter}{Acknowledgments}
 \chapter*{Acknowledgments}
-I want to thank my advisor Elise deDoncker and Robert Trenary for all their support.
+I would like to thank my adviser Elise de Doncker for her support and feedback
+in preparing this thesis.
+I would also like to thank Robert Trenary, who first introduced me to the field of
+Machine Learning. His constant support, encouragement, friendship, and willingness to
+listen to a myriad of ill-conceived and underdeveloped ideas has been of immeasurable benefit.
+Thanks to Wesley Tansey for helpful discussion related to many of the ideas contained in this thesis.
+I am grateful for the assistance provided by Sinead Williamson in deriving the mathematics
+necessary to extend the collapsed Gibbs sampler to the nonparametric case.
+Most of all, I thank my wife Brooke Lake. Without her this thesis never would have
+been started, let alone finished.
 
 
 \tableofcontents
@@ -184,7 +194,6 @@ I want to thank my advisor Elise deDoncker and Robert Trenary for all their supp
 
 \cleardoublepage
 % \phantomsection
-\pagenumbering{arabic}
 \addcontentsline{toc}{chapter}{Notation}
 \chapter*{Notation}
 As this thesis deals almost exclusively with time series, $t$ will always
@@ -218,8 +227,8 @@ in Table~\ref{table:distributions}.
     \label{table:distributions}
 \end{table}
 
-
 \chapter{Introduction}
+\pagenumbering{arabic}
 Uncovering the underlying structure giving rise to a set of observations is a
 fundamental theme in Machine Learning. The canonical representation of this structure
 is the \ac{PGM}. The inclusion or exclusion of edges in a \ac{PGM} explicitly imposes
@@ -1120,7 +1129,7 @@ of $A^t$. A complete description is given in Algorithm~\ref{alg:sample-states}.
     \caption{Sample States.\label{alg:sample-states}}
     \begin{algorithmic}[1]
         \Require{Observation sequence $\seq{x}{1}{T}$.}
-        \Ensure{A sequence of laent state $\seq{y}{1}{T}$.}
+        \Ensure{A sequence of latent state $\seq{y}{1}{T}$.}
         \State
         \State \(\triangleright\) Forward Traversal
         \State $u_j^1 \gets P(y_i)P(x_1 \mid y_i)$
@@ -1911,7 +1920,7 @@ For a majority of inspected sequences the algorithm was able to produce nearly
 equivalent or superior segmentations when compared to those produced by the observer.
 Figure~\ref{fig:actseg} visually contrasts the segmentations produced by the \ac{CHMM}
 and those produced by the exercise observer. the ability of the \ac{CHMM} to produce
-superior annotations is particularly prevelant in Figures~\ref{fig:actseg:burpee}
+superior annotations is particularly prevalent in Figures~\ref{fig:actseg:burpee}
 and~\ref{fig:actseg:push-up}.
 \\\\
 The ability to ``clean up'' erroneous or noisy segmentations puts the \ac{CHMM}
@@ -1948,7 +1957,7 @@ For each experimental setup (number of classes and number of sample sequences)
 15 models of each type were fit to allow averaging performance metrics and assess model stability.
 The parameters of each model are fit using a different randomly selected subset of the available data,
 although the same random subsets are used for both the \ac{DPMoHMM} and \ac{DPMoCHMM} to enable
-staightforward comparison. Table~\ref{table:cluster-experiment} lists the exercises used.
+straightforward comparison. Table~\ref{table:cluster-experiment} lists the exercises used.
 
 \begin{table}[H]
     \centering
@@ -2014,10 +2023,10 @@ sequences being assigned a single cluster. This is not entirely surprising, cons
 the sampler is unable to move multiple sequences in a single step. An attempt to approximately
 count the number of such failures are given in the \emph{Fail} column in Table~\ref{table:cluster-types-ami}.
 \\\\
-The second noteable point of failure is the inability of the sampler to discover the correct
+The second notable point of failure is the inability of the sampler to discover the correct
 number of true exercises, especially in the nine class case, Figure~\ref{fig:cluster-type-counts}.
 This is likely due to the mismatch between the actual distribution of clusters and the
-Dirichlet process. Replacing the Dirichlet process with other stochastic pocesses which
+Dirichlet process. Replacing the Dirichlet process with other stochastic processes which
 allow more control over tail behavior, such as the Pitman-Yor process \cite{pitman-yor-teh},
 is a promising direction for future research.
 
@@ -2039,7 +2048,7 @@ is a promising direction for future research.
     \end{subfigure}
     \caption[Relationship between log likelihood and AMI]{
         Relationship between joint log likelihood and clustering performance as measured
-        by AMI for various number of sample seqeunces. Solid lines give best linear fit
+        by AMI for various number of sample sequences. Solid lines give best linear fit
         to the observed data. Shaded regions depict 95\% confidence intervals computed using
         5,000 bootstrap resamples. As can be seen, there is a much stronger trend for higher
         log likelihood to result in increased performance as measured by AMI when using a
