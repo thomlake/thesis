@@ -99,12 +99,13 @@
 
 \setlength\parindent{0pt}
 
-\author{Thom L. Lake\\\normalsize{\emph{Western Michigan University}}\\\&\\\normalsize{\emph{Atlas Wearables}}}
-\title{Analyzing Repetitive Sequences with Structured Dynamic Bayesian Networks}
+\author{Thomas L. Lake\\\normalsize{\emph{Western Michigan University}}\\\&\\\normalsize{\emph{Atlas Wearables}}}
+\title{ANALYZING REPETITIVE SEQUENCES WITH STRUCTURED DYNAMIC BAYESIAN NETWORKS}
 \date{\yyyymmdddate\today}
 
 \begin{document}
-\maketitle
+% \maketitle
+\input{tllake.title.tex}
 
 \chapter*{Disclaimer}
 This document describes privately funded research intended
@@ -113,7 +114,20 @@ contained within without express written consent of the author, Thom L. Lake,
 is in direct violation of terms agreed upon before receiving this document.
 
 \chapter*{Abstract}
-Abstract goes here
+Time series often feature structure that is known a priori and easily described using
+natural language terms such as repetitive, symmetric, seasonal, and self-similar.
+However, the typical priors used in Bayesian analysis, normally due to the
+convenience of conjugacy, do not capture such complex phenomena well.
+As a result of this mismatch, known structure is modeled poorly or completely ignored.
+Focusing on time series with repetitive structure, this thesis proposes to overcome this
+problem by reducing, rather than increasing, the capacity of a well know time series model,
+the Hidden Markov Model.
+Through a careful choice in the way model capacity is reduced, the model is forced to use
+its latent variables in an interpretable way which accurately reflects known structure.
+In addition to increased modeling performance, the lower capacity model also admits more
+efficient inference and parameter estimation procedures.
+Experimental results are presented demonstrating the effectiveness of this approach both
+in a supervised and unsupervised learning context.
 
 \chapter*{Dedication}
 To my wife Brooke Lake.
@@ -212,8 +226,8 @@ Considerable attention has been given to the problem of automated structure disc
 Algorithms for structure discovery typically start as a blank slate, attempting to induce structure
 from observations alone.
 \\\\
-On the other hand, when applying Machine Learning to solve real world problems there is
-often background knowledge available about the problem domain. The ability to exploit
+On the other hand, when applying Machine Learning to solve real world problems, there is
+often background knowledge available about the target domain. The ability to exploit
 this knowledge to enable or improve potential solutions is of obvious virtue.
 When this domain knowledge can be expressed in the form of dependencies which are known to exist
 or not exist a priori, this knowledge can be easily incorporated into the \ac{PGM} formalism.
