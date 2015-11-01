@@ -108,6 +108,8 @@
 \pagenumbering{roman}
 \input{tllake.title.tex}
 
+\input{tllake.copyright.tex}
+
 % \chapter*{Disclaimer}
 % This document describes privately funded research intended
 % for commercial use. Any redistribution of this document or the material
@@ -141,13 +143,20 @@
 I would like to thank my adviser Elise de Doncker for her support and feedback
 in preparing this thesis.
 I would also like to thank Robert Trenary, who first introduced me to the field of
-Machine Learning. His constant support, encouragement, friendship, and willingness to
+Machine Learning.
+His constant support, encouragement, friendship, and willingness to
 listen to a myriad of ill-conceived and underdeveloped ideas has been of immeasurable benefit.
+Many thanks to Atlas Wearables for funding this project, and the Atlas Wearables team for their
+friendship and support.
 Thanks to Wesley Tansey for helpful discussion related to many of the ideas contained in this thesis.
 I am grateful for the assistance provided by Sinead Williamson in deriving the mathematics
 necessary to extend the collapsed Gibbs sampler to the nonparametric case.
 Most of all, I thank my wife Brooke Lake. Without her this thesis never would have
 been started, let alone finished.
+
+\vspace{3\baselineskip}
+
+\hspace*{0.5\textwidth}Thomas L. Lake
 
 
 \tableofcontents
@@ -1986,6 +1995,16 @@ relationship between \ac{AMI} and the complete data log likelihood for the
 This is especially important since one would not have access to the label required
 to compute \ac{AMI} in a real world clustering scenario. Alternate measures of performance,
 such as likelihood, would need to be used to evaluate model performance.
+\\\\
+In addition to \ac{AMI}, the resulting clusters were assessed in terms of
+supervised accuracy.
+To do so each of the clusters was assigned the label of the most
+frequently appearing exercise class within that cluster.
+The resulting confusion matrices and raw accuracies are given in Figure~\ref{fig:cluster-type-confusion}.
+Accuracy numbers computed in this manner are not meaningful on their own as a
+naive clustering which puts every sample in its own cluster would result in 100\% accuracy.
+Figure~\ref{fig:cluster-type-counts} visualizes the distributions of the number of
+clusters found and shows that this is not the case in the experiments presented here.
 
 \begin{table}[H]
     \centering
@@ -2010,14 +2029,6 @@ such as likelihood, would need to be used to evaluate model performance.
     \label{table:cluster-types-ami}
 \end{table}
 
-As well as \ac{AMI} the resulting clusters were also assessed in terms of
-supervised accuracy. To do so each of the clusters was assigned the label of the most
-frequently appearing exercise class within that cluster. The resulting confusion
-matrices and raw accuracies are given in Figure~\ref{fig:cluster-type-confusion}.
-Such numbers are not meaningful on their own as putting every sample in its
-own cluster would result in 100\% accuracy. Figure~\ref{fig:cluster-type-counts} shows that
-this is not the case in the experiments presented here. % TODO: fix this last sentence
-\\\\
 Although the results presented here are quite positive, there are several ways in
 which the \ac{DPMoCHMM} does not perform adequately. The first, and most disheartening
 is largely a failure of the sampler. Occasionally the sampler would get stuck in poor
@@ -2038,22 +2049,25 @@ is a promising direction for future research.
     \begin{subfigure}{\textwidth}
         \includegraphics[width=\textwidth]{img/clustering.types/cluster-correlation.pdf}
         \caption{Three Exercises}
-        \label{fig:cluster-type-confusion-3}
+        \label{fig:cluster-correlation-3}
     \end{subfigure}
 \end{figure}
 
 \begin{figure}[H]
     \centering
+    \ContinuedFloat
     \begin{subfigure}{\textwidth}
         \includegraphics[width=\textwidth]{img/clustering.types/large-cluster-correlation.pdf}
         \caption{Nine Exercises}
-        \label{fig:cluster-type-confusion-9}
+        \label{fig:cluster-correlation-9}
     \end{subfigure}
     \caption[Relationship between log likelihood and AMI]{
         Relationship between joint log likelihood and clustering performance as measured
-        by AMI for various number of sample sequences. Solid lines give best linear fit
-        to the observed data. Shaded regions depict 95\% confidence intervals computed using
-        5,000 bootstrap resamples. As can be seen, there is a much stronger trend for higher
+        by AMI for various number of sample sequences using 3 (\subref{fig:cluster-correlation-3})
+        and 9 (\subref{fig:cluster-correlation-9}) exercises.
+        Solid lines give best linear fit to the observed data.
+        Shaded regions depict 95\% confidence intervals computed using 5,000 bootstrap resamples.
+        As can be seen, there is a much stronger trend for higher
         log likelihood to result in increased performance as measured by AMI when using a
         \ac{CHMM} (blue) base distribution than when using a standard \ac{HMM} (red).
     }
