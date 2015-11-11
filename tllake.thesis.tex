@@ -391,8 +391,8 @@ location, temperature, motion sensors~\cite{har-survey},
 or combinations thereof.
 Keeping in line with much of the \ac{HAR} literature,
 the focus of this work shall be on wearable sensor based systems,
-in particular systems utilizing accelerometers and gyroscopes~\cite{multiple-sensor-bao}
-as input. In addition to sensor type, systems vary both in body location
+in particular systems utilizing accelerometer and gyroscope~\cite{multiple-sensor-bao}
+input data. In addition to sensor type, systems vary both in body location
 and the number of locations used.
 \\\\
 From an implementation perspective there are obvious advantages to using a
@@ -428,8 +428,8 @@ domain and fundamentally rule out certain post-hoc analysis~\cite{ms-overview}.
 \\\\
 On the other end of the spectrum are systems with narrow activity categories.
 A common example from the literature, and the one explored in this work,
-is that of Exercise classification \cite{ms-activity}. Within this regime activities
-last for much briefer periods of time, on the order of seconds to minutes. Furthermore,
+is that of exercise classification \cite{ms-activity}. Within this regime activities
+last for much briefer periods, on the order of seconds to minutes. Furthermore,
 there is little chance for category ambiguity as categories are sufficiently narrow
 to avoid many of problems associated with broad categories mentioned above. However,
 narrow categories are not without problems. The most obvious is that it requires either
@@ -459,7 +459,7 @@ The definition presented above is the most general output one could
 expect from a \ac{HAR} system, and specific \ac{HAR} tasks present in the literature
 can be seen as special cases or transformations of the output. For example if,
 one only wishes to account for the amount of time spent performing each activity,
-if suffices to set
+it suffices to set
 \[
     s_y = \sum_t \1\{y_t = y\}
 \]
@@ -526,26 +526,25 @@ There are many advantages to a windowed approach to sequential classification pr
 Most notably, using a fixed sized window as input allows one to sidestep the need to deal
 explicitly with the temporal aspects of the problem. This frees the practitioner
 to leverage the vast array of classification techniques suitable only for static
-inputs. Another advantage of windowing is it allows predictions to be obtained in
-a near realtime manner, as prediction lag is only fundamentally limited by the size
+inputs. In addition, windowing allows predictions to be obtained in
+a near realtime manner, as prediction lag is only limited by the size
 of the window. This is in contrast with classification methods designed specifically
 to work with sequential data, which typically involve inference procedures
 to handle temporal dependencies between observations and/or predictions.
 \\\\
 Despite the advantages of windowing, neglecting the sequential nature of the problem
-is the largest drawback of the approach. As only a small window is available
+is a significant drawback of the approach. As only a small window is available
 to the classifier, context outside this window is unavailable, rendering
 the predicted activity of each window independent. Furthermore, because the
-window size must fixed a priori, an activity which requires more than this time
-to be identified will potentially fail to be recognized as accurately.
+window size must be fixed a priori, an activity which requires more than this time
+to be identified will potentially fail to be recognized accurately.
 
 \section{Related Work}
 \label{sec:HAR Related Work}
 \subsection{Supervised Approaches}
 Most approaches to \ac{HAR} in the literature fall within the
 supervised Machine Learning framework~\cite{har-survey}, i.e.,
-sensor sequences are paired with label sequences denoting the activity
-being done at each point in time.
+sensor sequences are paired with label sequences denoting the activity at each point in time.
 \\\\
 The closest work in terms of domain and scope to that presented here is~\cite{ms-activity}.
 Like this work, they work within the exercise classification domain utilizing data
@@ -570,7 +569,7 @@ lower level classifier operating over fixed sized input windows. They apply thei
 daily activities and exercises, although not simultaneously.
 
 \subsection{Unsupervised Approaches}
-Unlike the supervised setting, ground truth labels are not provided to the learning
+Unlike the supervised setting, labels are not provided to the learning
 algorithm in the unsupervised setting. Lacking labels, the goal of unsupervised \ac{HAR}
 reduces to clustering, and possibly segmenting, sequences. This task has received considerably
 less attention from the \ac{HAR} community, although some prior work does exist.
@@ -958,7 +957,7 @@ and the number of times a particular observation $o$ is observed in state $i$ re
 
 where $\Theta = \{\pi_0, \pi_i, \theta_i\}$ and $\alpha = \{\alpha_0, \alpha_i, \alpha_i^\prime\}$.
 \\\\
-Substituting the equations for the of the priors into (\ref{eq:bayes-hmm-joint-simple})
+Substituting the equations for the priors into (\ref{eq:bayes-hmm-joint-simple})
 and rewriting in terms of the counting variables gives,
 
 \begin{align} \label{eq:bayes-hmm-joint-full}
@@ -1483,8 +1482,6 @@ The resulting \ac{HMM}'s performance was assessed on two tasks 1.) Inferring
 the coin being used at each time of the training sequence, and 2.) Discriminating between an
 out of sample sequence of flips drawn from the two coin switching process or a single coin with the
 same expected value as the trick coin.
-\\\
-The point
 \\\\
 For the first task, the \ac{HMM} fit with the collapsed Gibbs sampling performed quite well,
 and the \ac{MAP} state sequence closely aligned with the true state sequence.
@@ -1521,10 +1518,11 @@ significantly outperformed the \ac{HMM} fit with \ac{EM}, Figure~\ref{fig:trick-
 
 \section{Learning to Segment Repetitive Sequences}
 \label{sec:Learning to Segment Repetitive Sequences}
-Having demonstrated the effectiveness of the collapsed Gibbs sampling approach,
-we now describe experiments which demonstrate the ability of the \ac{CHMM} to utilize its repetitive
-latent structure in an artificial segmentation task. Sequences were generate by
-embedding a recurrent sequence between two constant sequences and adding Gaussian random noise.
+Having demonstrated the efficacy of the collapsed Gibbs sampling approach
+on the trick coin problem, the \ac{CHMM} was applied to an artificial
+segmentation task.
+Sequences were generate by embedding a recurrent sequence between two
+constant sequences and adding Gaussian random noise.
 In particular an example sequence is generated from the following distribution.
 
 \begin{align*}
@@ -1686,7 +1684,7 @@ of the experiments.
 
 \chapter{Segmented Exercise Classification}
 \label{chap:Segmented Exercise Classification}
-An obvious precursor to classifying each timestep of an entire routine is to classify the hand segmented
+An obvious precursor to classifying each timestep of an entire routine is to classify segmented
 exercises into 1 of $K$ mutually exclusive exercise classes. This task is significantly easier than
 than the full routine classification task since several simplifying assumptions can be made. First,
 we can assume each sequence belongs to a single class. Second, we can assume each class is approximately
@@ -1723,7 +1721,7 @@ and a strong performing system heavily influenced from the activity recognition 
 As only sequences with a single label are considered in this experiment a voting procedure is used
 to aggregate predictions for individual time steps to produce the final classification for both
 the Random Forest and Structured Perceptron. Note that this gives an unfair advantage to these
-models. In a real world activity classification setting one would not a priori have knowledge of
+models. In a real world activity classification setting, one would not have knowledge of
 the bounds (segmentation) over which to aggregate votes.
 
 \subsection{Baseline from Literature}
@@ -1760,9 +1758,9 @@ Best performing settings on the validation set are noted in bold.
 
 \subsection{Structured Perceptron}
 The Structured Perceptron is a discriminative analog of a \ac{HMM}.
-It is worth noting this claim is somewhat tenuous. It might
-be considered more appropriate to say this is only true of the closely
-related \ac{CRF}, which models $P(Y|X)$ as opposed to a \ac{HMM}
+It is worth noting this claim is somewhat tenuous, and it might
+be more appropriate to say this is only true of the closely
+related \ac{CRF}, which models $P(Y|X)$ directly as opposed to a \ac{HMM}
 which models $P(Y,X)$. Regardless, both are chain structured discriminative
 models which avoid the local normalization problems, \emph{label bias}, associated
 with \acp{HMM} and \acp{MEMM} \cite{lafferty-crf}.
@@ -1809,13 +1807,13 @@ The MAP sampled assignment is used to produce a point estimate of the parameters
 Table~\ref{table:segment-results} gives train and test set accuracy numbers for the
 considered classification methods. In general the Random Forest outperforms the other
 models in terms of raw accuracy, although the \ac{MoCHMM} is quite competitive.
-The Structured Perceptron significantly under performs the other models,
+The Structured Perceptron significantly underperforms the other models,
 likely due to being restricted to linear decision boundaries as noted above.
 \\\\
 The same experiments as above were repeated for the Random Forest and \ac{MoCHMM} fit with
 the collapsed Gibbs sampler, but this time including a number of \emph{rest} sequences
 equal the most frequent activity. While the accuracy of the Random Forest degrades in this regime,
-surprisingly the accuracy of the \ac{MoCHMM} increases. Inspecting performance for just the \emph{rest} class
+surprisingly the accuracy of the \ac{MoCHMM} increases. Inspecting performance for the \emph{rest} class only
 reveals this is at least in some part due to the \ac{MoCHMM} doing a better job of modeling
 the \emph{rest} class, the last two columns of Table~\ref{table:segment-results-rest}.
 The lower recall number for the Random Forest imply that approximately 25\% of the \emph{rest}
