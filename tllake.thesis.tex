@@ -721,7 +721,7 @@ The corresponding generative story is given by
     \item Sample an initial observation $x_t \sim \SomeDist(\phi_{y_1})$.
     \item For $t = 2$ to $T$
     \begin{enumerate}
-        \item Sample the next state $y_{t} \mid z_t \sim \Cat(\pi_{y_{t-1}})$ conditioned on the previous state.
+        \item Sample the next state $y_{t} \mid y_{t-1} \sim \Cat(\pi_{y_{t-1}})$ conditioned on the previous state.
         \item Sample the next observation $x_t \mid y_t \sim \SomeDist(\phi_{y_t})$ conditioned on the current state.
     \end{enumerate}
 \end{enumerate}
