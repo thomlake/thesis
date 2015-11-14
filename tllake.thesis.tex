@@ -32,6 +32,7 @@
 \definecolor{yellowDark}{HTML}{808001}
 \definecolor{magenta}{HTML}{A4296F}
 
+\newcommand{\dint}[0]{\displaystyle\int}
 \newcommand{\Z}[0]{\mathbb{Z}}
 \newcommand{\R}[0]{\mathbb{R}}
 \newcommand{\C}[0]{\mathbb{C}}
@@ -973,9 +974,9 @@ in terms of hyperparameters and counts
 
 \begin{equation}
     P(\mathcal{X}, \mathcal{Y} \mid \alpha_0, \alpha_i, \alpha_i^\prime)
-    = \frac{\Bf((\bm{n}_0 + \alpha_0)}{\Bf(\alpha_0)}
+    = \frac{\Bf(\bm{n}_0 + \alpha_0)}{\Bf(\alpha_0)}
     \prod_i \frac{\Bf{(\bm{n}_i + \alpha_i}}{\Bf(\alpha_i)}
-    \frac{\Bf((\bm{n}_i^\p + \alpha_i^\p)}{\Bf(\alpha_i^\p)},
+    \frac{\Bf(\bm{n}_i^\p + \alpha_i^\p)}{\Bf(\alpha_i^\p)},
     \label{eq:marg-likelihood-hmm}
 \end{equation}
 
