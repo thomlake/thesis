@@ -965,7 +965,7 @@ and rewriting in terms of the counting variables gives,
     P(\mathcal{X}, \mathcal{Y} \mid \Theta, \alpha)
     &= \frac{1}{\Bf(\alpha_0)} \prod_{i} \pi_{0,i}^{n_{0,i} + \alpha_{0,i} - 1} \nonumber \\
     & \times \prod_i \left(\frac{1}{\Bf(\alpha_i)} \prod_{j} \pi_{i,j}^{n_{i,j} + \alpha_{i,j} - 1}\right) \nonumber \\
-    & \times \prod_i \left(\frac{1}{\Bf(\alpha_i^\prime)} \prod_{v} \pi_{i,j}^{n_{i,v}^\prime + \alpha_{i,v}^\prime - 1}\right).
+    & \times \prod_i \left(\frac{1}{\Bf(\alpha_i^\prime)} \prod_{j} \theta_{i,j}^{n_{i,j}^\prime + \alpha_{i,j}^\prime - 1}\right).
 \end{align}
 
 Repeatedly applying the same steps used to derive (\ref{eq:dir-int-sol})
@@ -975,7 +975,7 @@ in terms of hyperparameters and counts
 \begin{equation}
     P(\mathcal{X}, \mathcal{Y} \mid \alpha_0, \alpha_i, \alpha_i^\prime)
     = \frac{\Bf(\bm{n}_0 + \alpha_0)}{\Bf(\alpha_0)}
-    \prod_i \frac{\Bf{(\bm{n}_i + \alpha_i}}{\Bf(\alpha_i)}
+    \prod_i \frac{\Bf(\bm{n}_i + \alpha_i)}{\Bf(\alpha_i)}
     \frac{\Bf(\bm{n}_i^\p + \alpha_i^\p)}{\Bf(\alpha_i^\p)},
     \label{eq:marg-likelihood-hmm}
 \end{equation}
