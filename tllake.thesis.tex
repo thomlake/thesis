@@ -99,7 +99,7 @@
 \algrenewcommand\algorithmicensure{\textbf{Output:}}
 
 \setlength\parindent{0pt}
-
+% Analyzing Repetitive Sequences with Structured Dynamic Bayesian Networks
 \author{Thomas L. Lake\\\normalsize{\emph{Western Michigan University}}\\\&\\\normalsize{\emph{Atlas Wearables}}}
 \title{ANALYZING REPETITIVE SEQUENCES WITH STRUCTURED DYNAMIC BAYESIAN NETWORKS}
 \date{\yyyymmdddate\today}
@@ -143,10 +143,11 @@
 \chapter*{Acknowledgments}
 I would like to thank my adviser Elise de Doncker for her support and feedback
 in preparing this thesis.
-I would also like to thank Robert Trenary, who first introduced me to the field of
+Thanks to Robert Trenary, who first introduced me to the field of
 Machine Learning.
 His constant support, encouragement, friendship, and willingness to
 listen to a myriad of ill-conceived and underdeveloped ideas has been of immeasurable benefit.
+I Thank John Kapenga for reviewing this thesis and providing helpful feedback.
 Many thanks to Atlas Wearables for funding this project, and the Atlas Wearables team for their
 friendship and support.
 Thanks to Wesley Tansey for helpful discussion related to many of the ideas contained in this thesis.
@@ -233,7 +234,9 @@ in Table~\ref{table:distributions}.
     Dirichlet & $\Dir$ \\
     Normal & $\Norm$ \\
     \end{tabular}
-    \caption[Distributions]{Distribution abbreviations.}
+    \caption[Abbreviations of Common Distributions]{
+        \textbf{Abbreviations of Common Distributions.}
+    }
     \label{table:distributions}
 \end{table}
 
@@ -340,7 +343,7 @@ The remainder of this thesis is organized as follows:
 \end{quote}
 
 \begin{quote}
-    Chapter~\ref{chap:Synthetic experiments with Hidden Markov Model} presents
+    Chapter~\ref{chap:Synthetic Experiments with Hidden Markov Model} presents
     synthetic experiments which are intended to explore the capabilities of the
     techniques introduced in Chapter~\ref{chap: Hidden Markov Models}
     and~\ref{chap: A Generative Model for Repetitive Sequences}.
@@ -613,7 +616,9 @@ the dataset.
     Minutes of Routine Data & 3636 & 1357\\
     Minutes of Activity Data & 1247 & 557\\
     \end{tabular}
-    \caption[Summary of exercise dataset]{Summary of exercise dataset.}
+    \caption[Summary of Exercise Dataset]{
+        \textbf{Summary of Exercise Dataset.}
+    }
     \label{table:dataset}
 \end{table}
 
@@ -641,9 +646,10 @@ Figure~\ref{fig:routine} shows an example routine with exercise start time and s
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=1\textwidth]{img/routine_380.pdf}
-    \caption[Example routine time series]{Example routine time series,
-    vertically ordered by $x$, $y$, $z$ (accelerometer, axis range from -3 to 3)
-    and $q$, $r$, $s$ (gyroscope, axis range from -600 to 600).}
+    \caption[Example Routine Time Series]{
+    \textbf{Example Routine Time Series.}
+    Axis are vertically ordered by $x$, $y$, $z$ (accelerometer, range from -3 to 3)
+    and $q$, $r$, $s$ (gyroscope, range from -600 to 600).}
     \label{fig:routine}
 \end{figure}
 
@@ -745,8 +751,8 @@ and grey vertices represent observed variables.
         \draw[->,line width=1pt] (y_t) to (x_t);
         \draw[->,line width=1pt] (y_tp1) to (x_tp1);
     \end{tikzpicture}
-    \caption[Slice representation of a HMM]{
-        Slice representation of a HMM.
+    \caption[Slice Representation of a HMM]{
+        \textbf{Slice Representation of a HMM.}
         Conditional dependencies and random variables are denoted by
         directed edges and vertices respectively. Shaded vertices correspond
         to random variables which are assumed to be observed.
@@ -1034,11 +1040,11 @@ for \acp{HMM} in~\cite{hmm-comparison-johnson}.
         \draw[->,line width=1pt] (y1-marg) to (x1-marg);
         \draw[->,line width=1pt] (ym-marg) to (xm-marg);
     \end{tikzpicture}
-    \caption[Bayesian HMM with and without collapsing]{
-        Graphical representation of a Bayesian HMM without (a) and with (b)
-        marginalization of the parameters $\Theta$. Notice that marginalization
-        of $\Theta$ introduces dependencies between latent states $y$, since
-        they now share a common parent $\alpha$ in (b).
+    \caption[Graphical Representation of a Bayesian HMM]{
+        \textbf{Graphical Representation of a Bayesian HMM.}
+        Parameters $\Theta$ are not marginalized in (a) and are marginalized in (b).
+        Notice that marginalization of $\Theta$ introduces dependencies between latent 
+        states $y$, since they now share a common parent $\alpha$ in (b).
     }
     \label{fig:hmm-marg}
 \end{figure}
@@ -1316,8 +1322,8 @@ in Figure~\ref{fig:osc-step}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{img/osc-step.pdf}
-    \caption[Oscillatory discrete time series]{
-        Example of a synthetic oscillatory discrete time series.
+    \caption[Oscillatory Discrete Time Series]{
+        \textbf{Oscillatory Discrete Time Series.}
     }
     \label{fig:osc-step}
 \end{figure}
@@ -1381,7 +1387,7 @@ which is recognized by the \ac{DFA} in Figure~\ref{fig:cyclic-dfa}.
         \draw[->,line width=1pt,shorten >= -1pt, shorten <= -1pt] (s4s1) to[in=315,out=180] (s1);
     \end{tikzpicture}
     \caption[Cyclic DFA]{
-        Cyclic DFA with four states.
+        \textbf{Cyclic DFA.}
     }
     \label{fig:cyclic-dfa}
 \end{figure}
@@ -1438,7 +1444,7 @@ discrete symbols, Figure~\ref{fig:cyclic-hmm}.
         \draw[->,line width=1pt,shorten >= -1pt, shorten <= -1pt] (s4) to (e4);
     \end{tikzpicture}
     \caption[Cyclic HMM]{
-        CHMM with four states.
+        \textbf{Cyclic HMM.}
     }
     \label{fig:cyclic-hmm}
 \end{figure}
@@ -1456,8 +1462,8 @@ and reduces the computational complexity of typical inference tasks such as
 filtering, smoothing, and decoding from $O(TK^2)$ to $O(TK)$.
 
 
-\chapter{Synthetic experiments with Hidden Markov Models}
-\label{chap:Synthetic experiments with Hidden Markov Model}
+\chapter{Synthetic Experiments with Hidden Markov Models}
+\label{chap:Synthetic Experiments with Hidden Markov Model}
 This chapter describes several synthetic experiments carried out utilizing the models and
 inference procedures developed in the previous Chapters. The focus on synthetic data
 is primarily intended as a demonstration and exploration of model aptitude. Experiments
@@ -1493,10 +1499,9 @@ Figure~\ref{fig:trick-coin-states}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{img/trick_coin_states.pdf}
-    \caption[Inferred states from trick coin example]{
-        Actual state sequence and example inferred state sequences from the
-        HMM fit with Gibbs sampling and EM. The HMM fit with EM
-        only uses a single state to model the observed sequence.
+    \caption[Inferred States from Trick Coin Example]{
+        \textbf{Inferred States from Trick Coin Example.}
+        The HMM fit with EM uses a single state to model the observed sequence.
     }
     \label{fig:trick-coin-states}
 \end{figure}
@@ -1510,9 +1515,9 @@ significantly outperformed the \ac{HMM} fit with \ac{EM}, Figure~\ref{fig:trick-
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{img/trick_coin_disc_accuracy.pdf}
-    \caption[Trick coin accuracy]{
-        Accuracy for the trick coin discriminative task. Whiskers
-        depict the maximum and minimum values.
+    \caption[Discriminative Trick Coin Accuracy]{
+        \textbf{Discriminative Trick Coin Accuracy.}
+        Whiskers depict the maximum and minimum values.
     }
     \label{fig:trick-coin-disc}
 \end{figure}
@@ -1612,8 +1617,8 @@ Figure~\ref{fig:artificial-segmentation-flat}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{img/artificial-segment-output-struct.pdf}
-    \caption[Example segmentation of synthetic sequences with structure]{
-        Unsupervised segmentation by a HMM with structured prior.
+    \caption[Example Segmentation of Synthetic Sequences with Structure]{
+        \textbf{Example Segmentation of Synthetic Sequences with Structure.}
     }
     \label{fig:artificial-segmentation-struct}
 \end{figure}
@@ -1621,8 +1626,8 @@ Figure~\ref{fig:artificial-segmentation-flat}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{img/artificial-segment-output-flat.pdf}
-    \caption[Example segmentation of synthetic sequence without structure]{
-        Unsupervised segmentation by a HMM with 2 states.
+    \caption[Example Segmentation of Synthetic Sequence without Structure]{
+        \textbf{Example Segmentation of Synthetic Sequence without Structure.}
     }
     \label{fig:artificial-segmentation-flat}
 \end{figure}
@@ -1664,8 +1669,10 @@ of the experiments.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{./img/artificial-clusters.pdf}
-    \caption[Visualization of synthetic sequence clusters]{
-        Example from each cluster and recurrent structure
+    \caption[Synthetic Sequence Clusters]{
+        \textbf{Synthetic Sequence Clusters.}
+        One sequence from each cluster is shown. 
+        The alternating colors depict the recurrent structure
         discovered by the \ac{DPMoCHMM}.
     }
     \label{fig:artificial-clusters}
@@ -1674,9 +1681,9 @@ of the experiments.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{./img/artificial-cluster-results.pdf}
-    \caption[Synthetic sequence clustering results]{
-        Results from clustering artificial sequences.
-        Comparison of Adjusted mutual information and number of discovered
+    \caption[Synthetic Sequence Clustering Results]{
+        \textbf{Synthetic Sequence Clustering Results.}
+        Graphs depict the adjusted mutual information and number of discovered
         clusters with (green) and without (blue) structured transition prior.
     }
     \label{fig:artificial-cluster-metrics}
@@ -1710,8 +1717,8 @@ analogous split of the training data. Table~\ref{table:segment-dataset} summariz
     Repetitions & 28476 & 12396\\
     Minutes of Data & 1247 & 557\\
     \end{tabular}
-    \caption[Summary of segment classification dataset]{
-        Summary of segment classification dataset.
+    \caption[Summary of Segment Classification Dataset]{
+        \textbf{Summary of Segment Classification Dataset.}
     }
     \label{table:segment-dataset}
 \end{table}
@@ -1829,8 +1836,8 @@ sequences are misclassified as an activity.
     MoCHMM (Gibbs) & 0.848 & 0.775 \\
     MoCHMM (Viterbi) & 0.837 & 0.762 \\
     \end{tabular}
-    \caption[Performance on the segmented exercise task]{
-        Segment classification performance of different classifiers.
+    \caption[Segmented Exercise Classification Performance]{
+        \textbf{Segmented Exercise Classification Performance.}
     }
     \label{table:segment-results}
 \end{table}
@@ -1841,8 +1848,8 @@ sequences are misclassified as an activity.
     Random Forest       & 0.995               & \textbf{0.81}      & 0.789          & \textbf{0.925}     & 0.755 \\
     MoCHMM (Gibbs)       & 0.829               & 0.799              & 0.790          & 0.81               & \textbf{0.829} \\
     \end{tabular}
-    \caption[Performance on the segmented exercise task with \emph{rest}]{
-        Segment classification performance including the \emph{rest} class.
+    \caption[Segmented Exercise Classification Performance with \emph{Rest}]{
+        \textbf{Segmented Exercise Classification Performance with \emph{Rest}.}
         The F1-score is reported as a macro (unweighted) average of the individual classes.
         Precision and recall are for \emph{rest} only.
     }
@@ -1915,8 +1922,8 @@ Instead, visual inspection of a random subset of exercises was used to qualitati
         \caption{Push-Ups.}
         \label{fig:actseg:push-up}
     \end{subfigure}
-    \caption[Unsupervised exercise segmentation]{
-        Visualization of segmentations produced by the CHMM.
+    \caption[Unsupervised Exercise Segmentation]{
+        \textbf{Unsupervised Exercise Segmentation.}
         Large grey bars denote observer annotations. Parts of the sequence drawn
         in black correspond to \emph{out} predictions, and parts drawn in color
         correspond to \emph{in} predictions. Red and blue highlight the repetitive structure
@@ -1977,8 +1984,8 @@ straightforward comparison. Table~\ref{table:cluster-experiment} lists the exerc
     3 &  burpees, sit-ups, dumbbell lateral raises\\\hline
     9 & dumbbell tricep extension, jumping jacks, burpees, sit-ups, dumbbell lateral raises, box jumps, alternating dumbbell bicep curls, push-ups, pull-ups\\
     \end{tabular}
-    \caption[Exercises used in clustering experiments]{
-        Exercises used in clustering experiments.
+    \caption[Exercises Used in Clustering Experiments]{
+        \textbf{Exercises Used in Clustering Experiments.}
     }
     \label{table:cluster-experiment}
 \end{table}
@@ -2018,8 +2025,9 @@ clusters found and shows that this is not the case in the experiments presented 
     $9$ & $90$ & $0.30 \pm 0.11$ & $0$ & $0$ & $0.49 \pm 0.07$ & $0$ & $1$\\
     $9$ & $360$ & $0.34 \pm 0.13$ & $0$ & $0$ & $0.62 \pm 0.07$ & $0$ & $10$\\
     \end{tabular}
-    \caption[Unsupervised clustering performance]{
-        Comparison of unsupervised clustering with \ac{HMM} and \ac{CHMM} base distributions.
+    \caption[Unsupervised Clustering Performance]{
+        \textbf{Unsupervised Clustering Performance.}
+        Comparison of models using \ac{HMM} and \ac{CHMM} base distributions.
         Reported AMI is the mean $\pm$ 1 standard deviation. The fail and success columns count
         the number of runs (of 15) resulting in an AMI less than $0.1$ and greater than $0.6$ respectively.
         The model using \ac{CHMM} base distributions consistently has higher performance overall,
@@ -2060,10 +2068,10 @@ is a promising direction for future research.
         \caption{Nine Exercises}
         \label{fig:cluster-correlation-9}
     \end{subfigure}
-    \caption[Relationship between log likelihood and AMI]{
-        Relationship between joint log likelihood and clustering performance as measured
-        by AMI for various number of sample sequences using 3 (\subref{fig:cluster-correlation-3})
-        and 9 (\subref{fig:cluster-correlation-9}) exercises.
+    \caption[Relationship between Joint Log Likelihood and AMI]{
+        \textbf{Relationship between Joint Log Likelihood and AMI.}
+        Three (\subref{fig:cluster-correlation-3}) and nine (\subref{fig:cluster-correlation-9}) 
+        exercises were used for various numbers for samples.
         Solid lines give best linear fit to the observed data.
         Shaded regions depict 95\% confidence intervals computed using 5,000 bootstrap resamples.
         As can be seen, there is a much stronger trend for higher
@@ -2085,9 +2093,10 @@ is a promising direction for future research.
         \caption{Nine Exercises.}
         \label{fig:cluster-type-counts-9}
     \end{subfigure}
-    \caption[Number of discovered clusters]{
-        Histogram of the number of clusters discovered by the DPMoHMM (red) and DPMoCHMM (blue)
-        when using 3 (\subref{fig:cluster-type-counts-3}) and 9 (\subref{fig:cluster-type-counts-9})
+    \caption[Number of Discovered Clusters]{
+        \textbf{Number of Discovered Clusters.}
+        DPMoHMM (red) and DPMoCHMM (blue)
+        when using three (\subref{fig:cluster-type-counts-3}) and nine (\subref{fig:cluster-type-counts-9})
         different exercises.
     }
     \label{fig:cluster-type-counts}
@@ -2105,8 +2114,8 @@ is a promising direction for future research.
         \caption{Nine Exercises.}
         \label{fig:cluster-type-confusion-9}
     \end{subfigure}
-    \caption[Clustering confusion matrices]{
-        Confusion matrices for the DPMoCHMM using 3 and 9 exercises classes.
+    \caption[Clustering Confusion Matrices]{
+        \textbf{Clustering Confusion Matrices.}
         Each cluster is assigned the label of the most frequently appearing class.
         The resulting accuracies from upper left to lower right in
         (\subref{fig:cluster-type-confusion-3}) are 76\%, 89\%, 87\%, and 87\%,
@@ -2144,6 +2153,9 @@ different random initializations are especially promising. This includes techniq
 as parallel tempering~\cite{learn-neighbor-mcmc} and tempered transitions~\cite{neal-tempered},
 which are well suited to dealing with poor mixing in multi-modal settings.
 
+\cleardoublepage
+% \phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{plain}
 \bibliography{tllake.thesis}
 
